@@ -10,7 +10,8 @@ UDirectorAllowPunchCondition::UDirectorAllowPunchCondition() :
 	NodeName = "Director Allow Punch";
 }
 
-bool UDirectorAllowPunchCondition::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+bool UDirectorAllowPunchCondition::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp,
+                                                              uint8* NodeMemory) const
 {
 	AUndeadDirector* directior = AUndeadDirector::GetCurrent();
 	return !directior || AUndeadDirector::GetCurrent()->PunchAvailable();

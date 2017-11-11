@@ -12,5 +12,5 @@ void UAnimNotifyReload::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 	if (ShooterCharacter)
 		ShooterCharacter->EndReload();
 	else
-		UE_LOG(LogTemp, Warning, TEXT("Trying to reload but no character found."));
+	UE_LOG(LogTemp, Warning, TEXT("Trying to reload but no character found."));
 }

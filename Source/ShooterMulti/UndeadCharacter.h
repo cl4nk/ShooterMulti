@@ -6,15 +6,16 @@
 #include "UndeadCharacter.generated.h"
 
 UCLASS()
+
 class SHOOTERMULTI_API AUndeadCharacter : public ACharacterWithHealth
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 public:
 
 	UPROPERTY(Category = UndeadCharacter, VisibleDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* PunchCollision;
-	
+
 	UPROPERTY(Category = UndeadCharacter, EditAnywhere, BlueprintReadWrite)
 	float Damages = 10.f;
 
@@ -25,6 +26,7 @@ public:
 	float PunchKnockback = 300000.f;
 
 	DECLARE_EVENT_OneParam(ACharacterWithHealth, FUndeadEvent, AUndeadCharacter*)
+
 	static FUndeadEvent PunchEvent;
 	static FUndeadEvent DeathEvent;
 
@@ -32,12 +34,17 @@ public:
 	AUndeadCharacter();
 
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
+	void BeginPlay() override;
+
 	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
+	void Tick(float DeltaSeconds) override;
 
 	bool Punch();
+
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+	void NetMulticast_Punch();
+	bool NetMulticast_Punch_Validate();
+	void NetMulticast_Punch_Implementation();
 
 	UFUNCTION(BlueprintPure, Category = Character)
 	bool HasPunched();
@@ -45,10 +52,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Character)
 	void InflictPunch();
 
-	virtual void Die() override;
+	void Die(AActor* Causer) override;
 
-private:
-	bool hasPunched;
+
+protected:
+	bool bHasPunched;
+
 	float punchTimer;
-
 };

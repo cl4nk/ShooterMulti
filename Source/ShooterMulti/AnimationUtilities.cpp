@@ -4,7 +4,8 @@
 #include "AnimationUtilities.h"
 #include "Animation/AnimInstance.h"
 
-void UAnimationUtilities::UpdateMontagePlayState(UAnimInstance* target, UAnimMontage* Montage, bool ShouldPlay, float InPlayRate, float OutBlendTime)
+void UAnimationUtilities::UpdateMontagePlayState(UAnimInstance* target, UAnimMontage* Montage, bool ShouldPlay,
+                                                 float InPlayRate, float OutBlendTime)
 {
 	if (ShouldPlay)
 	{
@@ -17,4 +18,3 @@ void UAnimationUtilities::UpdateMontagePlayState(UAnimInstance* target, UAnimMon
 			target->Montage_Stop(OutBlendTime, Montage);
 	}
 }
-

@@ -9,16 +9,16 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UDirectorAllowPunchCondition : public UBTDecorator
 {
-	GENERATED_BODY()
-	
+GENERATED_BODY()
+
 public:
 
 	UDirectorAllowPunchCondition();
 
-	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
+	bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
-	virtual FString GetStaticDescription() const override;
-	
+	FString GetStaticDescription() const override;
 };

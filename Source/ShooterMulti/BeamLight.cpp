@@ -13,7 +13,8 @@ ABeamLight::ABeamLight()
 	RootComponent = LightComponent = CreateDefaultSubobject<UPointLightComponent>(TEXT("Light"));
 }
 
-void ABeamLight::Initialize(FVector Start, FVector End, FLinearColor Color, float _Lifetime, float StartIntensity, UCurveFloat* _IntensityCurve)
+void ABeamLight::Initialize(FVector Start, FVector End, FLinearColor Color, float _Lifetime, float StartIntensity,
+                            UCurveFloat* _IntensityCurve)
 {
 	FVector beamMiddle = (Start + End) * .5f;
 	FVector beamVector = End - Start;

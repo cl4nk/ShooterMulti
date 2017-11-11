@@ -31,8 +31,6 @@ void UUndeadCharacterAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UUndeadCharacterAnim::AnimNotify_PunchHit(UAnimNotify* Notify)
 {
-	AUndeadCharacter* character = Cast<AUndeadCharacter>(TryGetPawnOwner());
-	
-	if (character)
-		character->InflictPunch();
+	if (UndeadCharacter)
+		UndeadCharacter->InflictPunch();
 }

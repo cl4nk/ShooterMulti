@@ -9,9 +9,8 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UHitDamage : public UDamageType
 {
-	GENERATED_BODY()
-		
-	
+GENERATED_BODY()
 };

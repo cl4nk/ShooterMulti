@@ -9,23 +9,23 @@
  * 
  */
 UCLASS(ClassGroup = AI, BlueprintType, Blueprintable)
+
 class SHOOTERMULTI_API AUndeadAIController : public AAIController
 {
-	GENERATED_BODY()
-	
+GENERATED_BODY()
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBlackboardData* BlackboardData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBehaviorTree* BehaviorTree;
 
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	void BeginPlay() override;
+	void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = Character)
 	bool Punch();
 
 protected:
 	UBlackboardComponent* BlackboardComponent;
-
 };

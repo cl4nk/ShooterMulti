@@ -2,7 +2,11 @@
 
 #include "ShooterMulti.h"
 #include "CharacterWithHealth.h"
+#include "Net/UnrealNetwork.h"
+#include "ShooterMultiGameState.h"
+#include "MarkerComponent.h"
 
+ACharacterWithHealth::FShooterEvent ACharacterWithHealth::DeathEvent;
 
 // Sets default values
 ACharacterWithHealth::ACharacterWithHealth()
@@ -10,6 +14,13 @@ ACharacterWithHealth::ACharacterWithHealth()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+	bReplicateMovement = true;
+
+	BodyColor = FLinearColor::White;
+
+	MarkerComponent = CreateDefaultSubobject<UMarkerComponent>(TEXT("Marker Component"));
+	AddOwnedComponent(MarkerComponent);
 }
 
 // Called when the game starts or when spawned
@@ -45,10 +56,12 @@ void ACharacterWithHealth::BeginPlay()
 			DissolveMaterials.Add(newMat);
 		}
 	}
+	FVector vectorColor(BodyColor);
 
 	for (auto mat : DissolveMaterials)
 	{
-		mat->SetScalarParameterValue(FName(TEXT("DissolveAmmount")), 0.f);
+		mat->SetScalarParameterValue("DissolveAmmount", 0.f);
+		mat->SetVectorParameterValue("BodyColor", vectorColor);
 	}
 }
 
@@ -66,19 +79,33 @@ void ACharacterWithHealth::Tick(float DeltaTime)
 	}
 }
 
+void ACharacterWithHealth::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(ACharacterWithHealth, Health);
+	DOREPLIFETIME(ACharacterWithHealth, TeamId);
+	DOREPLIFETIME(ACharacterWithHealth, BodyColor);
+}
+
 float ACharacterWithHealth::GetHealth()
 {
 	return Health;
 }
 
-float ACharacterWithHealth::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser)
+float ACharacterWithHealth::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+                                       class AController* EventInstigator, AActor* DamageCauser)
 {
 	float doneDamages = 0.f;
+
+	if (Role != ROLE_Authority)
+		return doneDamages;
 
 	const FPointDamageEvent* pointDamage = nullptr;
 
 	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
-		pointDamage = (FPointDamageEvent*)&DamageEvent;
+		pointDamage = (FPointDamageEvent *)&DamageEvent;
 
 	if (!IsDead())
 	{
@@ -91,7 +118,7 @@ float ACharacterWithHealth::TakeDamage(float DamageAmount, FDamageEvent const & 
 
 		if (Health <= 0.f)
 		{
-			Die();
+			Die(DamageCauser);
 		}
 	}
 
@@ -128,28 +155,38 @@ bool ACharacterWithHealth::IsDead()
 	return Health <= 0.f;
 }
 
-void ACharacterWithHealth::Die()
+void ACharacterWithHealth::Die(AActor* Causer)
 {
 	Health = 0.f;
 
+	DeathEvent.Broadcast(this, Causer);
+
+	Netmulticast_Die();
+}
+
+bool ACharacterWithHealth::Netmulticast_Die_Validate()
+{
+	return true;
+}
+
+void ACharacterWithHealth::Netmulticast_Die_Implementation()
+{
 	auto capsule = GetCapsuleComponent();
-	capsule->SetCollisionResponseToAllChannels(ECR_Ignore);
-	capsule->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	capsule->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
+	capsule->SetCollisionResponseToAllChannels( ECR_Ignore );
+	capsule->SetCollisionResponseToChannel( ECC_WorldStatic, ECR_Block );
+	capsule->SetCollisionResponseToChannel( ECC_WorldDynamic, ECR_Block );
 
-	auto mesh = GetMesh();
-
-	for (auto aSkeletalMesh : GetComponentsByClass(USkeletalMeshComponent::StaticClass()))
+	for ( auto aSkeletalMesh : GetComponentsByClass( USkeletalMeshComponent::StaticClass() ) )
 	{
-		USkeletalMeshComponent* skeletalMesh = Cast<USkeletalMeshComponent>(aSkeletalMesh);
-		skeletalMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		USkeletalMeshComponent* skeletalMesh = Cast<USkeletalMeshComponent>( aSkeletalMesh );
+		skeletalMesh->DetachFromComponent( FDetachmentTransformRules::KeepWorldTransform );
 		skeletalMesh->bPauseAnims = true;
-		skeletalMesh->SetCollisionObjectType(ECC_GameTraceChannel1);
-		skeletalMesh->SetCollisionResponseToAllChannels(ECR_Block);
-		skeletalMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-		skeletalMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-		skeletalMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		skeletalMesh->SetSimulatePhysics(true);
+		skeletalMesh->SetCollisionObjectType( ECC_GameTraceChannel1 );
+		skeletalMesh->SetCollisionResponseToAllChannels( ECR_Block );
+		skeletalMesh->SetCollisionResponseToChannel( ECC_Pawn, ECR_Ignore );
+		skeletalMesh->SetCollisionResponseToChannel( ECC_Camera, ECR_Ignore );
+		skeletalMesh->SetCollisionEnabled( ECollisionEnabled::QueryAndPhysics );
+		skeletalMesh->SetSimulatePhysics( true );
 	}
 }
 
@@ -164,10 +201,44 @@ void ACharacterWithHealth::UpdateDisapear()
 	if (DisapearTimer > DisapearingTime)
 		return FinishDisapear();
 
-	GetMesh()->SetScalarParameterValueOnMaterials(FName(TEXT("DissolveAmmount")), DisapearTimer / DisapearingTime);
+	float t = DisapearTimer / DisapearingTime;
+	for (auto mat : DissolveMaterials)
+	{
+		mat->SetScalarParameterValue("DissolveAmmount", t);
+	}
 }
 
 void ACharacterWithHealth::FinishDisapear()
 {
 	Destroy();
+}
+
+void ACharacterWithHealth::ForceColor(FLinearColor Color)
+{
+	BodyColor = Color;
+	OnRep_ChangeColor();
+}
+
+void ACharacterWithHealth::ChangeTeam(const int newTeamId)
+{
+	if (Role == ROLE_Authority)
+	{
+		TeamId = newTeamId;
+		AShooterMultiGameState* gameState = GetWorld()->GetGameState<AShooterMultiGameState>();
+		if (gameState)
+		{
+			BodyColor = gameState->GetTeamColor(TeamId);
+			OnRep_ChangeColor();
+		}
+	}
+}
+
+void ACharacterWithHealth::OnRep_ChangeColor()
+{
+	FVector vectorColor(BodyColor);
+
+	for (auto mat : DissolveMaterials)
+	{
+		mat->SetVectorParameterValue("BodyColor", vectorColor);
+	}
 }

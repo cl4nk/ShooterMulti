@@ -2,4 +2,4 @@
 
 #include "ShooterMulti.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ShooterMulti, "ShooterMulti" );
+IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ShooterMulti, "ShooterMulti" ) ;

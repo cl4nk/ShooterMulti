@@ -6,7 +6,8 @@
 #include "BeamLight.h"
 #include "Kismet/KismetMathLibrary.h"
 
-bool UWeaponUtility::ShootLaser(UWorld* World, AActor* Causer, FHitResult& HitResult, const FLaserWeaponData& WeaponData)
+bool UWeaponUtility::ShootLaser(UWorld* World, AActor* Causer, FHitResult& HitResult,
+                                const FLaserWeaponData& WeaponData)
 {
 	FVector lookLoc = WeaponData.LookTransform.GetLocation();
 	FVector lookDir = WeaponData.LookTransform.GetRotation().GetForwardVector();
@@ -22,10 +23,12 @@ bool UWeaponUtility::ShootLaser(UWorld* World, AActor* Causer, FHitResult& HitRe
 	CollisionParams.bTraceComplex = true;
 	CollisionParams.bReturnPhysicalMaterial = true;
 	//in case of actor hit
-	if (World->LineTraceSingleByChannel(HitResult, lookLoc, lookLoc + lookDir * WeaponData.MaxDistance, ECC_Visibility, CollisionParams))
+	if (World->LineTraceSingleByChannel(HitResult, lookLoc, lookLoc + lookDir * WeaponData.MaxDistance, ECC_Visibility,
+	                                    CollisionParams))
 	{
 		//make damages
-		FPointDamageEvent damageEvent = FPointDamageEvent(WeaponData.Damages, HitResult, lookDir, TSubclassOf<UDamageType>(UHitDamage::StaticClass()));
+		FPointDamageEvent damageEvent = FPointDamageEvent(WeaponData.Damages, HitResult, lookDir,
+		                                                  TSubclassOf<UDamageType>(UHitDamage::StaticClass()));
 		HitResult.Actor->TakeDamage(WeaponData.Damages, damageEvent, nullptr, Causer);
 
 		//push hit actors (physics)
@@ -45,32 +48,34 @@ bool UWeaponUtility::ShootLaser(UWorld* World, AActor* Causer, FHitResult& HitRe
 		return true;
 	}
 	//when no actor hit
-	else
-	{
-		HitResult.ImpactPoint = lookLoc + lookDir * WeaponData.MaxDistance;
-		HitResult.Distance = WeaponData.MaxDistance;
-		return false;
-	}
+	HitResult.ImpactPoint = lookLoc + lookDir * WeaponData.MaxDistance;
+	HitResult.Distance = WeaponData.MaxDistance;
+	return false;
 }
 
-void UWeaponUtility::MakeImpactDecal(const FHitResult& FromHit, UMaterialInterface* ImpactDecalMaterial, float ImpactDecalSizeMin, float ImpactDecalSizeMax)
+void UWeaponUtility::MakeImpactDecal(const FHitResult& FromHit, UMaterialInterface* ImpactDecalMaterial,
+                                     float ImpactDecalSizeMin, float ImpactDecalSizeMax)
 {
 	auto sm = FromHit.Actor->FindComponentByClass<UStaticMeshComponent>();
 	if (sm)
 	{
 		FVector decalPos = FromHit.ImpactPoint;
-		FRotator decalRot = (FromHit.ImpactNormal.Rotation().Quaternion() * FRotator(0.f, 0.f, FMath::RandRange(-180.f, 180.f)).Quaternion()).Rotator();
+		FRotator decalRot = (FromHit.ImpactNormal.Rotation().Quaternion() * FRotator(
+			0.f, 0.f, FMath::RandRange(-180.f, 180.f)).Quaternion()).Rotator();
 		float sdsize = FMath::RandRange(ImpactDecalSizeMin, ImpactDecalSizeMax);
 		FVector dsize = FVector(sdsize, sdsize, sdsize);
 
 		if (sm->Mobility == EComponentMobility::Static)
-			UGameplayStatics::SpawnDecalAtLocation(FromHit.Actor->GetWorld(), ImpactDecalMaterial, dsize, decalPos, decalRot, 0.f)->FadeScreenSize = .002f;
+			UGameplayStatics::SpawnDecalAtLocation(FromHit.Actor->GetWorld(), ImpactDecalMaterial, dsize, decalPos, decalRot,
+			                                       0.f)->FadeScreenSize = .002f;
 		else
-			UGameplayStatics::SpawnDecalAttached(ImpactDecalMaterial, dsize, sm, NAME_None, decalPos, decalRot, EAttachLocation::KeepWorldPosition)->FadeScreenSize = .002f;
+			UGameplayStatics::SpawnDecalAttached(ImpactDecalMaterial, dsize, sm, NAME_None, decalPos, decalRot,
+			                                     EAttachLocation::KeepWorldPosition)->FadeScreenSize = .002f;
 	}
 }
 
-void UWeaponUtility::MakeLaserBeam(UWorld* World, FVector Start, FVector End, UParticleSystem* BeamParticles, float BeamIntensity, FLinearColor Color, UCurveFloat* BeamIntensityCurve)
+void UWeaponUtility::MakeLaserBeam(UWorld* World, FVector Start, FVector End, UParticleSystem* BeamParticles,
+                                   float BeamIntensity, FLinearColor Color, UCurveFloat* BeamIntensityCurve)
 {
 	FTransform particleTransform;
 	particleTransform.SetLocation(Start);
@@ -85,7 +90,8 @@ void UWeaponUtility::MakeLaserBeam(UWorld* World, FVector Start, FVector End, UP
 	World->SpawnActor<ABeamLight>()->Initialize(Start, End, Color, .8f, BeamIntensity, BeamIntensityCurve);
 }
 
-void UWeaponUtility::MakeImpactParticles(UWorld* World, UParticleSystem* ImpactParticles, const FHitResult& FromHit, float Scale)
+void UWeaponUtility::MakeImpactParticles(UWorld* World, UParticleSystem* ImpactParticles, const FHitResult& FromHit,
+                                         float Scale)
 {
 	FTransform hitTransform;
 	hitTransform.SetLocation(FromHit.ImpactPoint);

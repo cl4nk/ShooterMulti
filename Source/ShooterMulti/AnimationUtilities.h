@@ -12,12 +12,13 @@ class UAnimMontage;
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UAnimationUtilities : public UBlueprintFunctionLibrary
 {
-	GENERATED_BODY()
-	
+GENERATED_BODY()
+
 public:
 	UFUNCTION(BlueprintCallable, Category=Animation)
-	static void UpdateMontagePlayState(UAnimInstance* target, UAnimMontage* Montage, bool ShouldPlay, float InPlayRate = 1.f, float OutBlendTime = .5f);
-	
+	static void UpdateMontagePlayState(UAnimInstance* target, UAnimMontage* Montage, bool ShouldPlay,
+	                                   float InPlayRate = 1.f, float OutBlendTime = .5f);
 };

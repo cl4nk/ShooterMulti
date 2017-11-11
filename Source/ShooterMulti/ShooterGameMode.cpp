@@ -3,31 +3,31 @@
 #include "ShooterMulti.h"
 #include "ShooterGameMode.h"
 #include "UndeadCharacter.h"
-#include "ShooterCharacter.h"
+#include "CharacterWithHealth.h"
 
 AShooterGameMode::AShooterGameMode() :
 	Super()
 {
-	
 }
 
 void AShooterGameMode::BeginPlay()
 {
 	AUndeadCharacter::PunchEvent.Clear();
 	AUndeadCharacter::DeathEvent.Clear();
-	AShooterCharacter::DeathEvent.Clear();
+	ACharacterWithHealth::DeathEvent.Clear();
 
 	Deaths = 0;
 	Kills = 0;
 
-	KillEventHandle = AUndeadCharacter::DeathEvent.AddLambda([this](AUndeadCharacter* charac) { AddKill(); });
-	DeathEventHandle = AShooterCharacter::DeathEvent.AddLambda([this](AShooterCharacter* charac) { AddDeath(); });
+	DeathEventHandle = ACharacterWithHealth::DeathEvent.AddLambda([this](ACharacterWithHealth* charac, AActor* Causer)
+	{
+		AddDeath();
+	});
 }
 
 void AShooterGameMode::Destroyed()
 {
-	AShooterCharacter::DeathEvent.Remove(DeathEventHandle);
-	AUndeadCharacter::DeathEvent.Remove(KillEventHandle);
+	ACharacterWithHealth::DeathEvent.Remove(DeathEventHandle);
 }
 
 void AShooterGameMode::Respawn()

@@ -28,11 +28,6 @@ void AUndeadAIController::Tick(float DeltaTime)
 
 	if (character && character->IsDead())
 		Destroy();
-	else
-	{
-		APawn* player = UGameplayStatics::GetPlayerPawn(this, 0);
-		BlackboardComponent->SetValueAsObject(FName("Player"), Cast<ACharacter>(player));
-	}
 }
 
 bool AUndeadAIController::Punch()

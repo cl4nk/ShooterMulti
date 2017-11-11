@@ -9,10 +9,10 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UAnimNotifyReload : public UAnimNotify
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
-	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-	
+	void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 };

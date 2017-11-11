@@ -9,14 +9,14 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UUndeadPunchTask : public UBTTaskNode
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 	UUndeadPunchTask(const FObjectInitializer& ObjectInitializer);
 
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8 * NodeMemory) override;
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
-	virtual FString GetStaticDescription() const override;
-
+	FString GetStaticDescription() const override;
 };

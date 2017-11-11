@@ -10,20 +10,22 @@ class UPointLightComponent;
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API ABeamLight : public AActor
 {
-	GENERATED_BODY()
-	
+GENERATED_BODY()
+
 public:
 
 	ABeamLight();
 
 	UFUNCTION(BlueprintCallable, Category = Light)
-	void Initialize(FVector Start, FVector End, FLinearColor Color, float Lifetime, float StartIntensity = 5000.f, UCurveFloat* IntensityCurve = nullptr);
+	void Initialize(FVector Start, FVector End, FLinearColor Color, float Lifetime, float StartIntensity = 5000.f,
+	                UCurveFloat* IntensityCurve = nullptr);
 
-	virtual void Tick(float DeltaSeconds) override;
+	void Tick(float DeltaSeconds) override;
 
-private:
+protected:
 	float TotalLifetime = 0.f;
 	float Lifetime;
 	UCurveFloat* IntensityCurve;

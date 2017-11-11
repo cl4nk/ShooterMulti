@@ -10,7 +10,7 @@ UUndeadPunchTask::UUndeadPunchTask(const FObjectInitializer& ObjectInitializer) 
 	NodeName = "Undead Punch";
 }
 
-EBTNodeResult::Type UUndeadPunchTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8 * NodeMemory)
+EBTNodeResult::Type UUndeadPunchTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AUndeadAIController* owner = Cast<AUndeadAIController>(OwnerComp.GetAIOwner());
 

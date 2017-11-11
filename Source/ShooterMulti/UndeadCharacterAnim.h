@@ -11,9 +11,10 @@ class AUndeadCharacter;
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UUndeadCharacterAnim : public UAnimInstance
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 public:
 	UPROPERTY(Transient, EditAnywhere, BlueprintReadWrite)
@@ -25,14 +26,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resources|Montages")
 	UAnimMontage* PunchMontage;
 
-	virtual void NativeInitializeAnimation() override;
+	void NativeInitializeAnimation() override;
 
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-	
+	void NativeUpdateAnimation(float DeltaSeconds) override;
+
 	UFUNCTION()
 	void AnimNotify_PunchHit(UAnimNotify* Notify);
 
-private:
+protected:
 	AUndeadCharacter* UndeadCharacter;
-
 };

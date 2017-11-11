@@ -55,7 +55,8 @@ float UDistanceCondition::GetKeysDistance(const UBehaviorTreeComponent& OwnerCom
 	return (key0 - key1).Size();
 }
 
-FVector UDistanceCondition::GetKeyPosition(const UBlackboardComponent* blackboardComp, const FBlackboardKeySelector& blackboardKey) const
+FVector UDistanceCondition::GetKeyPosition(const UBlackboardComponent* blackboardComp,
+                                           const FBlackboardKeySelector& blackboardKey) const
 {
 	if (blackboardKey.SelectedKeyType == UBlackboardKeyType_Object::StaticClass())
 	{
@@ -66,10 +67,7 @@ FVector UDistanceCondition::GetKeyPosition(const UBlackboardComponent* blackboar
 
 		return actor->GetActorLocation();
 	}
-	else
-	{
-		return blackboardComp->GetValue<UBlackboardKeyType_Vector>(blackboardKey.GetSelectedKeyID());
-	}
+	return blackboardComp->GetValue<UBlackboardKeyType_Vector>(blackboardKey.GetSelectedKeyID());
 }
 
 FString UDistanceCondition::GetStaticDescription() const
@@ -88,8 +86,9 @@ FString UDistanceCondition::GetStaticDescription() const
 	{
 		Key1Desc = BlackboardKey1.SelectedKeyName.ToString();
 	}
-	
-	return FString::Printf(TEXT("%s Is %s Than %f Away From %s"), *Key0Desc, IsInversed() ? TEXT("More") : TEXT("Less"), Distance, *Key1Desc);
+
+	return FString::Printf(TEXT("%s Is %s Than %f Away From %s"), *Key0Desc, IsInversed() ? TEXT("More") : TEXT("Less"),
+	                       Distance, *Key1Desc);
 }
 
 #if WITH_EDITOR

@@ -8,7 +8,8 @@
 
 void UShooterCharacterAnim::NativeInitializeAnimation()
 {
-	ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner());
+	// Removed, set by the pawn itself for multiplayer
+	// ShooterCharacter = Cast<AShooterCharacter>( TryGetPawnOwner() );
 }
 
 void UShooterCharacterAnim::NativeUpdateAnimation(float DeltaSeconds)
@@ -26,7 +27,7 @@ void UShooterCharacterAnim::NativeUpdateAnimation(float DeltaSeconds)
 	Direction = movement.GetSafeNormal();
 	RelativeSpeed = movement.Size() / ShooterCharacter->GetMovementComponent()->GetMaxSpeed();
 
-	FRotator lookRotation = UKismetMathLibrary::NormalizedDeltaRotator(ShooterCharacter->GetControlRotation(), ShooterCharacter->GetActorRotation());
+	FRotator lookRotation = ShooterCharacter->GetAimOffsets();
 	AimPitch = UKismetMathLibrary::ClampAngle(lookRotation.Pitch, -90.f, 90.f);
 	AimYaw = UKismetMathLibrary::ClampAngle(lookRotation.Yaw, -90.f, 90.f);
 
@@ -43,17 +44,22 @@ void UShooterCharacterAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 	float playRate = FireAnimLength / ShooterCharacter->FireRate;
 	bool shooting = ShooterCharacter->IsShooting();
-	UAnimationUtilities::UpdateMontagePlayState(this, FireMontage, shooting && State == EShooterCharacterState::IdleRun, playRate, .2f);
-	UAnimationUtilities::UpdateMontagePlayState(this, FireAimMontage, shooting && State == EShooterCharacterState::Aim, playRate, .2f);
+	UAnimationUtilities::UpdateMontagePlayState(this, FireMontage, shooting && State == EShooterCharacterState::IdleRun,
+	                                            playRate, .2f);
+	UAnimationUtilities::UpdateMontagePlayState(this, FireAimMontage, shooting && State == EShooterCharacterState::Aim,
+	                                            playRate, .2f);
 
 	if (ShooterCharacter->ConsumeHitTrigger())
 		Montage_Play(HitMontage);
 }
 
+void UShooterCharacterAnim::SetShooterCharacter(AShooterCharacter* newShooterCharacter)
+{
+	ShooterCharacter = newShooterCharacter;
+}
+
 void UShooterCharacterAnim::AnimNotify_PunchHit(UAnimNotify* Notify)
 {
-	AShooterCharacter* character = Cast<AShooterCharacter>(TryGetPawnOwner());
-
-	if (character)
-		character->InflictPunch();
+	if (ShooterCharacter)
+		ShooterCharacter->InflictPunch();
 }

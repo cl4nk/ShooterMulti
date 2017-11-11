@@ -2,7 +2,8 @@
 
 #include "ShooterMulti.h"
 #include "UndeadDirector.h"
-
+#include "SpawnerTeamSwitch.h"
+#include "ShooterMultiGameState.h"
 
 AUndeadDirector* AUndeadDirector::Current = nullptr;
 
@@ -18,30 +19,40 @@ void AUndeadDirector::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PunchTimers.Empty();
-
 	Current = this;
 
-	if (SpawnPoints.Num() == 0)
-		UE_LOG(LogTemp, Warning, TEXT("Undead Director has no spawn point."));
+	UndeadCharacterList.Empty();
 
-	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AUndeadDirector::SpawnEnemy, SecondPerSpawn, true);
-	
-	PunchEventHandle = AUndeadCharacter::PunchEvent.AddLambda([this](AUndeadCharacter* charac) { OnUndeadPunch(charac); });
+	if (Role != ROLE_Authority)
+		return;
+
+	if (SpawnPoints.Num() == 0)
+	UE_LOG(LogTemp, Warning, TEXT("Undead Director has no spawn point."));
+
+
 
 	//normalize frequencies
 	float mag = 0.f;
 	for (int i = 0; i < SpawnPoints.Num(); ++i)
-		mag += SpawnPoints[i].UseFrequency;
+		mag += SpawnPoints[i]->UseFrequency;
 	for (int i = 0; i < SpawnPoints.Num(); ++i)
-		SpawnPoints[i].UseFrequency /= mag;
+		SpawnPoints[i]->UseFrequency /= mag;
+
+	AShooterMultiGameState* const ShooterGameState = GetWorld()->GetGameState<AShooterMultiGameState>();
+
+	ShooterGameState->OnStateChange.AddDynamic(this, &AUndeadDirector::HandleGameState);
 }
 
 void AUndeadDirector::Destroyed()
 {
-	AUndeadCharacter::PunchEvent.Remove(PunchEventHandle);
+	if (Role != ROLE_Authority)
+		return;
 
-	GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
+	AShooterMultiGameState* const ShooterGameState = GetWorld()->GetGameState<AShooterMultiGameState>();
+	
+	ShooterGameState->OnStateChange.RemoveDynamic(this, &AUndeadDirector::HandleGameState);
+
+	StopSpawn();
 
 	if (Current == this)
 		Current = nullptr;
@@ -50,30 +61,80 @@ void AUndeadDirector::Destroyed()
 // Called every frame
 void AUndeadDirector::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 
 	for (int i = 0; i < PunchTimers.Num(); ++i)
 	{
 		PunchTimers[i] += DeltaTime;
 		if (PunchTimers[i] >= 1.f)
-		PunchTimers.RemoveAt(i--);
+			PunchTimers.RemoveAt(i--);
+	}
+}
+
+void AUndeadDirector::HandleGameState(EShooterMultiState state)
+{
+	switch (state)
+	{
+	case EShooterMultiState::SMS_Playing:
+		{
+			StartSpawn();
+			break;
+		}
+	case EShooterMultiState::SMS_EndGame:
+		{
+			StopSpawn();
+			break;
+		}
+	default:
+		break;
+	}
+}
+
+void AUndeadDirector::StartSpawn()
+{
+	PunchTimers.Empty();
+
+	AUndeadCharacter::PunchEvent.Clear();
+	AUndeadCharacter::DeathEvent.Clear();
+
+	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AUndeadDirector::SpawnEnemy, SecondPerSpawn, true);
+
+	PunchEventHandle = AUndeadCharacter::PunchEvent.AddLambda([this](AUndeadCharacter* charac) { OnUndeadPunch(charac); });
+	DeathEventHandle = AUndeadCharacter::DeathEvent.AddLambda([this](AUndeadCharacter* charac) { OnUndeadDeath(charac); });
+
+	AShooterMultiGameState* const ShooterGameState = GetWorld()->GetGameState<AShooterMultiGameState>();
+
+	MaxUndeadCount = BaseUndeadCount + PerPlayerUndeadCount * (ShooterGameState->PlayerArray.Num() - 1);
+}
+
+void AUndeadDirector::StopSpawn()
+{
+	AUndeadCharacter::PunchEvent.Remove(PunchEventHandle);
+	AUndeadCharacter::DeathEvent.Remove(DeathEventHandle);
+
+	GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
+
+	for (int i = 0; i < UndeadCharacterList.Num(); ++ i)
+	{
+		AUndeadCharacter* charac = UndeadCharacterList[i];
+		charac->Controller->UnPossess();
 	}
 }
 
 void AUndeadDirector::SpawnEnemy()
 {
-	if (SpawnPoints.Num() == 0)
+	if (SpawnPoints.Num() == 0 || SpawnAvailable() == false || Role != ROLE_Authority)
 		return;
 
 	float rand = FMath::FRand();
 	float fq = 0.f;
-	FUndeadSpawnPoint* selectedSpawnPoint = nullptr;
+	ASpawnerTeamSwitch* selectedSpawnPoint = nullptr;
 	for (int i = 0; i < SpawnPoints.Num(); ++i)
 	{
-		fq += SpawnPoints[i].UseFrequency;
+		fq += SpawnPoints[i]->UseFrequency;
 		if (fq > rand)
 		{
-			selectedSpawnPoint = &SpawnPoints[i];
+			selectedSpawnPoint = SpawnPoints[i];
 			break;
 		}
 	}
@@ -81,18 +142,30 @@ void AUndeadDirector::SpawnEnemy()
 	if (!selectedSpawnPoint)
 		return;
 
-	FActorSpawnParameters spawnParameters;
-	spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	auto undead = GetWorld()->SpawnActor<AUndeadCharacter>(
-		selectedSpawnPoint->UndeadBlueprint,
-		selectedSpawnPoint->Point->GetActorLocation(),
-		selectedSpawnPoint->Point->GetActorRotation(),
-		spawnParameters);
+	selectedSpawnPoint->Spawn();
+}
+
+void AUndeadDirector::OnUndeadSpawn(AUndeadCharacter* Char)
+{
+	if (Char == nullptr)
+		return;
+
+	UndeadCharacterList.AddUnique(Char);
+}
+
+void AUndeadDirector::OnUndeadDeath(AUndeadCharacter* Char)
+{
+	UndeadCharacterList.Remove(Char);
 }
 
 AUndeadDirector* AUndeadDirector::GetCurrent()
 {
 	return Current;
+}
+
+bool AUndeadDirector::SpawnAvailable()
+{
+	return UndeadCharacterList.Num() < MaxUndeadCount;
 }
 
 bool AUndeadDirector::PunchAvailable()

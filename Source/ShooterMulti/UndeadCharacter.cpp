@@ -4,6 +4,7 @@
 #include "UndeadCharacter.h"
 #include "CharacterWithHealth.h"
 #include "HitDamage.h"
+#include "Net/UnrealNetwork.h"
 
 AUndeadCharacter::FUndeadEvent AUndeadCharacter::PunchEvent;
 AUndeadCharacter::FUndeadEvent AUndeadCharacter::DeathEvent;
@@ -28,34 +29,44 @@ void AUndeadCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	punchTimer = 0.f;
-	hasPunched = false;
+	bHasPunched = false;
 }
 
 // Called every frame
-void AUndeadCharacter::Tick( float DeltaTime )
+void AUndeadCharacter::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 
-	hasPunched = false;
+	bHasPunched = false;
 	punchTimer -= DeltaTime;
 }
 
 bool AUndeadCharacter::Punch()
 {
-	if (punchTimer > 0.f ||hasPunched)
+	if (punchTimer > 0.f || bHasPunched)
 		return false;
 
-	hasPunched = true;
-	punchTimer = PunchCooldown;
-
-	PunchEvent.Broadcast(this);
+	NetMulticast_Punch();
 
 	return true;
 }
 
+bool AUndeadCharacter::NetMulticast_Punch_Validate()
+{
+	return true;
+}
+
+void AUndeadCharacter::NetMulticast_Punch_Implementation()
+{
+	bHasPunched = true;
+	punchTimer = PunchCooldown;
+
+	PunchEvent.Broadcast(this);
+}
+
 bool AUndeadCharacter::HasPunched()
 {
-	return hasPunched;
+	return bHasPunched;
 }
 
 void AUndeadCharacter::InflictPunch()
@@ -83,7 +94,8 @@ void AUndeadCharacter::InflictPunch()
 		{
 			if (!hitActors.Contains(character))
 			{
-				FPointDamageEvent damageEvent = FPointDamageEvent(Damages, hit, GetActorForwardVector(), TSubclassOf<UDamageType>(UHitDamage::StaticClass()));
+				FPointDamageEvent damageEvent = FPointDamageEvent(Damages, hit, GetActorForwardVector(),
+				                                                  TSubclassOf<UDamageType>(UHitDamage::StaticClass()));
 				character->TakeDamage(Damages, damageEvent, nullptr, this);
 				hitActors.Add(character);
 			}
@@ -99,9 +111,9 @@ void AUndeadCharacter::InflictPunch()
 	}
 }
 
-void AUndeadCharacter::Die()
+void AUndeadCharacter::Die(AActor* Causer)
 {
-	Super::Die();
+	Super::Die(Causer);
 
 	DeathEvent.Broadcast(this);
 }

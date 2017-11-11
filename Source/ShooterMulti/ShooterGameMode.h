@@ -9,9 +9,10 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API AShooterGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 public:
 
@@ -24,9 +25,9 @@ public:
 	AShooterGameMode();
 
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void BeginPlay() override;
 
-	virtual void Destroyed() override;
+	void Destroyed() override;
 
 	virtual void Respawn();
 
@@ -36,7 +37,6 @@ public:
 
 	void Quit();
 
-private:
-	FDelegateHandle KillEventHandle;
+protected:
 	FDelegateHandle DeathEventHandle;
 };

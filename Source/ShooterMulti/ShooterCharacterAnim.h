@@ -10,42 +10,45 @@
  * 
  */
 UCLASS(Transient, Blueprintable)
+
 class SHOOTERMULTI_API UShooterCharacterAnim : public UAnimInstance
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 public:
-	UPROPERTY(Transient, EditAnywhere, BlueprintReadOnly)
+	UPROPERTY( Transient, EditAnywhere, BlueprintReadOnly )
 	FVector2D Direction;
 
-	UPROPERTY(Transient, EditAnywhere, BlueprintReadOnly)
+	UPROPERTY( Transient, EditAnywhere, BlueprintReadOnly )
 	EShooterCharacterState State;
 
-	UPROPERTY(Transient, EditAnywhere, BlueprintReadOnly)
+	UPROPERTY( Transient, EditAnywhere, BlueprintReadOnly )
 	float RelativeSpeed;
-	
-	UPROPERTY(Transient, EditAnywhere, BlueprintReadOnly)
+
+	UPROPERTY( Transient, EditAnywhere, BlueprintReadOnly )
 	float AimYaw;
 
-	UPROPERTY(Transient, BlueprintReadOnly)
+	UPROPERTY( Transient, BlueprintReadOnly )
 	float AimPitch;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Resources|Infos")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category="Resources|Infos" )
 	float FireAnimLength;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Resources|Montages")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category="Resources|Montages" )
 	UAnimMontage* ReloadMontage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Resources|Montages")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category="Resources|Montages" )
 	UAnimMontage* FireMontage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Resources|Montages")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category="Resources|Montages" )
 	UAnimMontage* FireAimMontage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resources|Montages")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Resources|Montages" )
 	UAnimMontage* PunchMontage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resources|Montages")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Resources|Montages" )
 	UAnimMontage* HitMontage;
 
-	virtual void NativeInitializeAnimation() override;
+	void NativeInitializeAnimation() override;
 
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	void SetShooterCharacter(AShooterCharacter* newShooterCharacter);
 
 	UFUNCTION()
 	void AnimNotify_PunchHit(UAnimNotify* Notify);
@@ -53,5 +56,4 @@ public:
 protected:
 	AShooterCharacter* ShooterCharacter;
 	bool PunchMontagePlayed = false;
-
 };

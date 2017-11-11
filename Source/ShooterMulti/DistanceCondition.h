@@ -9,9 +9,10 @@
  * 
  */
 UCLASS()
+
 class SHOOTERMULTI_API UDistanceCondition : public UBTDecorator
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = DistanceCondition)
 	FBlackboardKeySelector BlackboardKey0;
@@ -24,14 +25,14 @@ class SHOOTERMULTI_API UDistanceCondition : public UBTDecorator
 
 	UDistanceCondition(const FObjectInitializer& ObjectInitializer);
 
-	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
+	void InitializeFromAsset(UBehaviorTree& Asset) override;
 
-	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
+	bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
-	virtual FString GetStaticDescription() const override;
+	FString GetStaticDescription() const override;
 
 #if WITH_EDITOR
-	virtual FName GetNodeIconName() const override;
+	FName GetNodeIconName() const override;
 #endif // WITH_EDITOR
 
 protected:
