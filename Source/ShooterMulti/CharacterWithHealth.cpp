@@ -188,6 +188,8 @@ void ACharacterWithHealth::Netmulticast_Die_Implementation()
 		skeletalMesh->SetCollisionEnabled( ECollisionEnabled::QueryAndPhysics );
 		skeletalMesh->SetSimulatePhysics( true );
 	}
+
+	MarkerComponent->DestroyComponent(false);
 }
 
 void ACharacterWithHealth::StartDisapear()
