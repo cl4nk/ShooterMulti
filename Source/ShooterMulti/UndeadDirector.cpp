@@ -12,6 +12,7 @@ AUndeadDirector::AUndeadDirector()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bNetLoadOnClient = false;
 }
 
 // Called when the game starts or when spawned
@@ -23,12 +24,8 @@ void AUndeadDirector::BeginPlay()
 
 	UndeadCharacterList.Empty();
 
-	if (Role != ROLE_Authority)
-		return;
-
 	if (SpawnPoints.Num() == 0)
 	UE_LOG(LogTemp, Warning, TEXT("Undead Director has no spawn point."));
-
 
 
 	//normalize frequencies
@@ -45,9 +42,6 @@ void AUndeadDirector::BeginPlay()
 
 void AUndeadDirector::Destroyed()
 {
-	if (Role != ROLE_Authority)
-		return;
-
 	AShooterMultiGameState* const ShooterGameState = GetWorld()->GetGameState<AShooterMultiGameState>();
 	
 	ShooterGameState->OnStateChange.RemoveDynamic(this, &AUndeadDirector::HandleGameState);
@@ -123,7 +117,7 @@ void AUndeadDirector::StopSpawn()
 
 void AUndeadDirector::SpawnEnemy()
 {
-	if (SpawnPoints.Num() == 0 || SpawnAvailable() == false || Role != ROLE_Authority)
+	if (SpawnPoints.Num() == 0 || SpawnAvailable() == false)
 		return;
 
 	float rand = FMath::FRand();
