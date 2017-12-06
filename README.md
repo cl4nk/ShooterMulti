@@ -47,5 +47,6 @@
    | Right Shift | Sprint |
    | Left click | Shoot |
    | Right click | Aim |
+
 [*] This will of course not pause the entire game
 
