@@ -24,7 +24,6 @@
    - Mini map
 
 ### Limits and bad behaviours
-   - After a game restarts, it is impossible to display the Score HUD
    - It is impossible to join a game if it's already started
 
 ### How to..
