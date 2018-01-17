@@ -161,6 +161,8 @@ protected:
 	void OnNetworkFailure( UWorld* world, UNetDriver* netDrive, ENetworkFailure::Type type, const FString& message );
 	void OnTravelFailure( UWorld* world, ETravelFailure::Type type, const FString& message );
 
+	void GoToMainMap() const;
+
 #pragma region Host Delegates
 	/* Delegate called when session created */
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
@@ -220,4 +222,7 @@ protected:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Loading Interface" )
 	TSubclassOf<UUserWidget> loadingWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Instance")
+	bool bAllowMainMap = true;
 };

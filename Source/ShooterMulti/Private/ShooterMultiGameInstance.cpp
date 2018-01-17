@@ -57,6 +57,7 @@ void UShooterMultiGameInstance::EndLoadingScreen()
 
 void UShooterMultiGameInstance::Shutdown()
 {
+	bAllowMainMap = false;
 	DestroySessionAndLeaveGame();
 }
 
@@ -638,21 +639,11 @@ void UShooterMultiGameInstance::OnDestroySessionComplete( FName SessionName, boo
 			Sessions->ClearOnDestroySessionCompleteDelegate_Handle( OnDestroySessionCompleteDelegateHandle );
 
 			// If it was successful, we just load another level (could be a MainMenu!)
-			if ( bWasSuccessful )
+			if ( bWasSuccessful || State != ENetworkState::NS_None)
 			{
-				CurrentSessionName = "";
-				UWorld* world = WorldContext->World();
-				if ( world )
-					UGameplayStatics::OpenLevel( world, MenuMapName, true );
 				State = ENetworkState::NS_None;
-			}
-			else if ( IsHosting() || IsJoining() ) // Was not in a session but joining
-			{
 				CurrentSessionName = "";
-				UWorld* world = WorldContext->World();
-				if ( world )
-					UGameplayStatics::OpenLevel( world, MenuMapName, true );
-				State = ENetworkState::NS_None;
+				GoToMainMap();
 			}
 		}
 	}
@@ -675,4 +666,14 @@ void UShooterMultiGameInstance::OnTravelFailure( UWorld* world, ETravelFailure::
 										  TEXT("UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"), world, (int)type, *message ));
 
 	UE_LOG( LogTemp, Error, TEXT("UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"), world, (int)type, *message );
+}
+
+void UShooterMultiGameInstance::GoToMainMap() const
+{
+	if (bAllowMainMap)
+	{
+		UWorld* world = WorldContext->World();
+		if ( world )
+			UGameplayStatics::OpenLevel( world, MenuMapName, true );
+	}
 }

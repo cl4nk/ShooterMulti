@@ -40,11 +40,12 @@ void AUndeadDirector::BeginPlay()
 	ShooterGameState->OnStateChange.AddDynamic(this, &AUndeadDirector::HandleGameState);
 }
 
-void AUndeadDirector::Destroyed()
+void AUndeadDirector::EndPlay( const EEndPlayReason::Type EndPlayReason )
 {
 	AShooterMultiGameState* const ShooterGameState = GetWorld()->GetGameState<AShooterMultiGameState>();
-	
-	ShooterGameState->OnStateChange.RemoveDynamic(this, &AUndeadDirector::HandleGameState);
+
+	if ( ShooterGameState )
+		ShooterGameState->OnStateChange.RemoveDynamic(this, &AUndeadDirector::HandleGameState);
 
 	StopSpawn();
 

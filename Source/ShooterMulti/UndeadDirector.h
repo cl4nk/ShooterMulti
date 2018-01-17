@@ -43,7 +43,7 @@ public:
 	// Called when the game starts or when spawned
 	void BeginPlay() override;
 
-	void Destroyed() override;
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	// Called every frame
 	void Tick(float DeltaSeconds) override;
