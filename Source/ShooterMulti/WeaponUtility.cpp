@@ -15,7 +15,8 @@ bool UWeaponUtility::ShootLaser(UWorld* World, AActor* Causer, FHitResult& HitRe
 	//apply spread
 	if (WeaponData.Spread > 0.f)
 	{
-		lookDir = UKismetMathLibrary::RandomUnitVectorInCone(lookDir, FMath::DegreesToRadians(WeaponData.Spread * .5f));
+		// REMOVED FOR 4.18 - lookDir = UKismetMathLibrary::RandomUnitVectorInCone(lookDir, FMath::DegreesToRadians(WeaponData.Spread * .5f));
+		lookDir = UKismetMathLibrary::RandomUnitVectorInConeInDegrees( lookDir, WeaponData.Spread * .5f );
 	}
 
 	FCollisionQueryParams CollisionParams;
