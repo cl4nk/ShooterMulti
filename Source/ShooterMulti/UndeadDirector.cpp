@@ -112,8 +112,10 @@ void AUndeadDirector::StopSpawn()
 	for (int i = 0; i < UndeadCharacterList.Num(); ++ i)
 	{
 		AUndeadCharacter* charac = UndeadCharacterList[i];
-		charac->Controller->UnPossess();
+		if ( charac->Controller )
+		 charac->Controller->UnPossess();
 	}
+	UndeadCharacterList.Empty();
 }
 
 void AUndeadDirector::SpawnEnemy()
