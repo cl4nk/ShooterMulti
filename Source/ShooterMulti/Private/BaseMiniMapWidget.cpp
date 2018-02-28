@@ -39,12 +39,12 @@ void UBaseMiniMapWidget::BeginDestroy()
 
 ESlateVisibility UBaseMiniMapWidget::GetMarkerVisibility(AActor * Actor) const
 {
+	APawn * Pawn = GetOwningPlayer()->GetPawn();
+	if (Pawn == nullptr)
+		return ESlateVisibility::Collapsed;
+
     if (Actor == nullptr)
         return ESlateVisibility::Collapsed; 
-
-    APawn * Pawn = GetOwningPlayer()->GetPawn();
-    if (Pawn == nullptr)
-        return ESlateVisibility::Collapsed;
 
     if (Actor->GetHorizontalDistanceTo(Pawn) > RadarRange)
         return ESlateVisibility::Collapsed;
@@ -54,11 +54,11 @@ ESlateVisibility UBaseMiniMapWidget::GetMarkerVisibility(AActor * Actor) const
 
 FVector2D UBaseMiniMapWidget::GetMarkerPosition(AActor * Actor) const
 {
-    if (Actor == nullptr)
-        return FVector2D::ZeroVector;
+	APawn * Pawn = GetOwningPlayer()->GetPawn();
+	if (Pawn == nullptr)
+		return FVector2D::ZeroVector;
 
-    APawn * Pawn = GetOwningPlayer()->GetPawn();
-    if (Pawn == nullptr)
+    if (Actor == nullptr)
         return FVector2D::ZeroVector;
 
     FTransform PlayerTransform = Pawn->GetActorTransform();

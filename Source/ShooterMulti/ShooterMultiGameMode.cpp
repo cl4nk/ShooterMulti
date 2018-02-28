@@ -18,7 +18,7 @@ AShooterMultiGameMode::AShooterMultiGameMode()
 	bUseSeamlessTravel = true;
 }
 
-#pragma region AGameModeBase
+//#pragma region AGameModeBase
 void AShooterMultiGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -142,9 +142,9 @@ FString AShooterMultiGameMode::InitNewPlayer(APlayerController* NewPlayerControl
 
 	return returnValue;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma region PlayerStart choice
+//#pragma region PlayerStart choice
 AActor* AShooterMultiGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
 {
 	AShooterMultiPlayerState* castedPlayerState = Cast<AShooterMultiPlayerState>(Player->PlayerState);
@@ -228,7 +228,7 @@ bool AShooterMultiGameMode::AreAllPlayersReady() const
 	return true;
 }
 
-#pragma endregion
+//#pragma endregion
 
 void AShooterMultiGameMode::RespawnEveryPlayer()
 {
@@ -389,7 +389,7 @@ void AShooterMultiGameMode::SetIgnoreAllInputs( bool bIgnoreInputs )
 	}
 }
 
-#pragma region State / Game Flow
+//#pragma region State / Game Flow
 void AShooterMultiGameMode::ChangeState(const EShooterMultiState shooterMultiState )
 {
 	AShooterMultiGameState* castedGameState = GetShooterGameState();
@@ -486,7 +486,7 @@ void AShooterMultiGameMode::OnChangeStateEndGame()
 {
 	SetIgnoreAllInputs( true );
 }
-#pragma endregion
+//#pragma endregion
 
 AShooterMultiGameState* AShooterMultiGameMode::GetShooterGameState() const
 {

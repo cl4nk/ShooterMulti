@@ -276,7 +276,7 @@ bool AShooterPlayerController::CreatePauseWidgetInstance()
 	return false;
 }
 
-#pragma region Respawning
+//#pragma region Respawning
 void AShooterPlayerController::Client_OnPostLogin_Implementation()
 {
 	Server_RequestRespawn();
@@ -302,4 +302,4 @@ bool AShooterPlayerController::Server_RequestRespawn_Validate()
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion

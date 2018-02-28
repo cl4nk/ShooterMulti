@@ -14,13 +14,14 @@ GENERATED_BODY()
 
 public:
 
-	
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Health, meta = (ClampMin = "0.0"))
 	float MaxHealth = 100.f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Health, meta = (ClampMin = "0.0"))
 	bool IsPlayerFriendly = true;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Health, meta = (ClampMin = "0.0"))
+	float FadeInDuration = .5f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Health, meta = (ClampMin = "0.0"))
 	float TimeBeforeDisapearing = 10.f;
@@ -49,6 +50,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Health)
 	virtual void ResetHealth();
 
+	
+
 	UFUNCTION(BlueprintPure, Category = Health)
 	bool IsDead();
 	UFUNCTION(BlueprintCallable, Category = Health)
@@ -68,6 +71,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Health)
 	FORCEINLINE bool IsDisapearing() { return Disapearing; }
 
+	UFUNCTION(BlueprintCallable, Category = Feedback)
+	void SetDissolveAmount(float t);
+
 	DECLARE_EVENT_TwoParams(ACharacterWithHealth, FShooterEvent, ACharacterWithHealth*, AActor*)
 
 	static FShooterEvent DeathEvent;
@@ -81,6 +87,8 @@ protected:
 	UMarkerComponent * MarkerComponent;
 
 	float DisapearTimer;
+	float FadeInTimer;
+	bool FadingIn;
 	bool Disapearing;
 	TArray<UMaterialInstanceDynamic*> DissolveMaterials;
 

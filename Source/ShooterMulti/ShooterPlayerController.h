@@ -73,7 +73,7 @@ public:
 	void Client_SetIgnoreAllInputs_Implementation(bool bIgnoreInputs);
 	bool Client_SetIgnoreAllInputs_Validate(bool bIgnoreInputs);
 
-#pragma region Respawning
+//#pragma region Respawning
 	/**
 	 * \brief Function called by the server during ShooterMultiGameMode::PostLogin()
 	 */
@@ -89,7 +89,7 @@ public:
 	void Server_RequestRespawn();
 	void Server_RequestRespawn_Implementation();
 	bool Server_RequestRespawn_Validate();
-#pragma endregion
+//#pragma endregion
 
 protected:
 	UPROPERTY( Transient, BlueprintReadOnly )
@@ -101,7 +101,7 @@ protected:
 	UPROPERTY( Transient, BlueprintReadOnly )
 	bool TryShoot = false;
 
-#pragma region PauseMenu
+//#pragma region PauseMenu
 protected:
 	void DisplayPause();
 
@@ -113,5 +113,5 @@ protected:
 	UUserWidget* WidgetPauseInstance = nullptr;
 
 	bool bIsPauseActive = false;
-#pragma endregion
+//#pragma endregion
 };
