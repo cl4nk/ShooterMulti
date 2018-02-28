@@ -69,7 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player's Request")
 	void RequestRespawn() const;
 
-#pragma region Team Management
+//#pragma region Team Management
 	/**
 	 * \brief Request to change team for controller
 	 * \param teamId _IN_ The team in which the player ask to join
@@ -89,7 +89,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "State")
 	int GetTeamID() const;
-#pragma endregion
+//#pragma endregion
 
 	UFUNCTION(BlueprintCallable, Category = "Player's Request")
 	void RequestReady(bool ready);

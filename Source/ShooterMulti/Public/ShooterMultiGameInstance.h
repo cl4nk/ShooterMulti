@@ -117,7 +117,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString LastIpAdress;
 
-#pragma region BP Events
+//#pragma region BP Events
 	UPROPERTY(BlueprintAssignable)
 	FActionCompletedEvent OnSessionCreated;
 
@@ -132,7 +132,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FActionCompletedEvent OnSessionLeaved;
-#pragma endregion
+//#pragma endregion
 
 protected:
 	bool HostSession( TSharedPtr<const FUniqueNetId> UserId, FName SessionName, FName MapName, bool bIsLAN,
@@ -163,7 +163,7 @@ protected:
 
 	void GoToMainMap() const;
 
-#pragma region Host Delegates
+//#pragma region Host Delegates
 	/* Delegate called when session created */
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
 	/* Delegate called when session started */
@@ -172,31 +172,31 @@ protected:
 	/** Handles to registered delegates for creating/starting a session */
 	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
 	FDelegateHandle OnStartSessionCompleteDelegateHandle;
-#pragma endregion
+//#pragma endregion
 
-#pragma region Find Delegates
+//#pragma region Find Delegates
 	/** Delegate for joining a session */
 	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
 
 	/** Handle to registered delegate for joining a session */
 	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
-#pragma endregion
+//#pragma endregion
 
-#pragma region Find session Delegates
+//#pragma region Find session Delegates
 	/** Delegate for searching for sessions */
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
 
 	/** Handle to registered delegate for searching a session */
 	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
-#pragma endregion
+//#pragma endregion
 
-#pragma region Destroy session Delegates
+//#pragma region Destroy session Delegates
 	/** Delegate for destroying a session */
 	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
 
 	/** Handle to registered delegate for destroying a session */
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
-#pragma endregion
+//#pragma endregion
 
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 

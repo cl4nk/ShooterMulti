@@ -71,7 +71,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = ShooterCharacter)
 	TSubclassOf<UCameraShake> SprintShake;
 
-#pragma region
+//#pragma region
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ShooterCharacter|Weapon", meta = (ClampMin = "0"))
 	int MaxTotalAmmoLeft = 120;
@@ -141,7 +141,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ShooterCharacter|Weapon")
 	TSubclassOf<UCameraShake> ShootShake;
-#pragma endregion
+//#pragma endregion
 
 public:
 	UPROPERTY(Transient, BlueprintReadOnly)
@@ -191,7 +191,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UCameraComponent* GetCamera() const;
 
-#pragma region Start Invincibility
+//#pragma region Start Invincibility
 public:
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Invincibility" )
 	bool IsInvincible() const;
@@ -207,9 +207,9 @@ protected:
 
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Invincibility" )
 	void VerifyInvincibility(const float deltaTime);
-#pragma endregion
+//#pragma endregion
 
-#pragma region Reload
+//#pragma region Reload
 public:
 	UFUNCTION(BlueprintPure, Category = "ShooterCharacter|Munitions")
 	int GetAmmoInMag() const;
@@ -255,9 +255,9 @@ protected:
 	void NetMulticast_ExecuteAbortReload();
 	void NetMulticast_ExecuteAbortReload_Implementation();
 	bool NetMulticast_ExecuteAbortReload_Validate();
-#pragma endregion
+//#pragma endregion
 
-#pragma region Shooting
+//#pragma region Shooting
 public:
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Shooting" )
 	void StartShoot();
@@ -281,9 +281,9 @@ protected:
 	void NetMulticast_MakeBeamFeedback(FHitResult hitResult, FLaserWeaponData weaponData);
 	void NetMulticast_MakeBeamFeedback_Implementation(FHitResult hitResult, FLaserWeaponData weaponData);
 	bool NetMulticast_MakeBeamFeedback_Validate(FHitResult hitResult, FLaserWeaponData weaponData);
-#pragma endregion
+//#pragma endregion
 
-#pragma region Punch
+//#pragma region Punch
 public:
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Punch" )
 	void Punch();
@@ -300,9 +300,9 @@ protected:
 	void NetMulticast_ExecutePunch();
 	void NetMulticast_ExecutePunch_Implementation();
 	bool NetMulticast_ExecutePunch_Validate();
-#pragma endregion
+//#pragma endregion
 
-#pragma region Aim
+//#pragma region Aim
 public:
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Aim" )
 	void StartAim();
@@ -331,9 +331,9 @@ protected:
 	void NetMulticast_ExecuteEndAim();
 	void NetMulticast_ExecuteEndAim_Implementation();
 	bool NetMulticast_ExecuteEndAim_Validate();
-#pragma endregion
+//#pragma endregion
 
-#pragma region Sprint
+//#pragma region Sprint
 public:
 	UFUNCTION( BlueprintCallable, Category = "ShooterCharacter|Sprint" )
 	void StartSprint();
@@ -360,7 +360,7 @@ protected:
 	void NetMulticast_ExecuteEndSprint();
 	void NetMulticast_ExecuteEndSprint_Implementation();
 	bool NetMulticast_ExecuteEndSprint_Validate();
-#pragma endregion
+//#pragma endregion
 
 	UFUNCTION( NetMulticast, Reliable, WithValidation, BlueprintCallable, Category = "ShooterCharacter" )
 	void NetMulticast_HitFeedback();

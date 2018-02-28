@@ -55,7 +55,7 @@ void AShooterMultiPlayerState::RequestRespawn() const
 	}
 }
 
-#pragma region Team Management
+//#pragma region Team Management
 void AShooterMultiPlayerState::RequestTeamChange(const int teamId)
 {
 	AShooterMultiGameState* gameState = GetWorld()->GetGameState<AShooterMultiGameState>();
@@ -93,7 +93,7 @@ int AShooterMultiPlayerState::GetTeamID() const
 {
 	return m_teamId;
 }
-#pragma endregion
+//#pragma endregion
 
 void AShooterMultiPlayerState::RequestReady(bool ready)
 {
