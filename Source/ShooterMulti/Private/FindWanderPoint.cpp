@@ -33,6 +33,10 @@ EBTNodeResult::Type UFindWanderPoint::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	{
 		NavData = NavSystem->GetMainNavData(FNavigationSystem::ECreateIfEmpty::Invalid);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TUFindWanderPoint - Nav System null"));
+	}
 
 	if (NavData && NavSystem)
 	{
@@ -47,7 +51,7 @@ EBTNodeResult::Type UFindWanderPoint::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	}
 	else
 	{
-
+		UE_LOG(LogTemp, Warning, TEXT("TUFindWanderPoint - Nav Data null"));
 	}
 
 	BlackBoard->SetValueAsVector(BlackboardKey.SelectedKeyName, location);
