@@ -64,20 +64,20 @@ void UShooterMultiGameInstance::Shutdown()
 FString UShooterMultiGameInstance::GetIPAdress() const
 {
 	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get();
-	
-	bool bindable = false;
-	TSharedRef<FInternetAddr> IPref = SocketSubsystem->GetLocalHostAddr(*GLog, bindable);
 
-	return IPref.Get().ToString(false);
+	bool bindable = false;
+	TSharedRef<FInternetAddr> IPref = SocketSubsystem->GetLocalHostAddr( *GLog, bindable );
+
+	return IPref.Get().ToString( false );
 }
 
 void UShooterMultiGameInstance::ServerTravelToMainMap()
 {
-	if ( IsHosting() ) 
+	if ( IsHosting() )
 	{
 		UWorld* world = WorldContext->World();
 		if ( world )
-			world->ServerTravel(MainMapName.ToString(), false, false);
+			world->ServerTravel( MainMapName.ToString(), false, false );
 	}
 }
 
@@ -102,6 +102,18 @@ void UShooterMultiGameInstance::CreateDefaultOnlineGame( bool bIsLAN, bool bIsPr
 
 	// Call our custom HostSession function. GameSessionName is a GameInstance variable
 	HostSession( Player->GetPreferredUniqueNetId(), GameSessionName, MainMapName, bIsLAN, bIsPresence, MaxNumPlayers );
+
+	//if ( UGameplayStatics::GetPlatformName() == "PS4" )
+	{
+		UE_LOG( LogTemp, Warning, TEXT( "CreateDefaultOnlineGame - WE ARE ON PS4" ) );
+		for ( int playerId = 1; playerId < MaxNumPlayers; ++playerId )
+		{
+			UE_LOG( LogTemp, Warning, TEXT( "CreateDefaultOnlineGame - trying to CreateLocalPlayer with playerId[%d]" ), playerId );
+			FString outError = "";
+			if ( !CreateLocalPlayer( playerId, outError, false ) )
+				UE_LOG( LogTemp, Warning, TEXT( "CreateDefaultOnlineGame - error while adding local player [%s]" ), *outError );
+		}
+	}
 }
 
 void UShooterMultiGameInstance::StartOnlineGame( FName SessionName, FString Options )
@@ -218,7 +230,7 @@ void UShooterMultiGameInstance::JoinOnlineGameDirty( FString IpAdress, const FSt
 	}
 
 	LastIpAdress = IpAdress;
-	
+
 	// Assuming you are not already in the PlayerController (if you are, just call ClientTravel directly)
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController( GetWorld(), 0 );
 	UE_LOG(LogTemp, Warning, TEXT("JoinOnlineGameDirty Options : %s"), *Options);
@@ -639,7 +651,7 @@ void UShooterMultiGameInstance::OnDestroySessionComplete( FName SessionName, boo
 			Sessions->ClearOnDestroySessionCompleteDelegate_Handle( OnDestroySessionCompleteDelegateHandle );
 
 			// If it was successful, we just load another level (could be a MainMenu!)
-			if ( bWasSuccessful || State != ENetworkState::NS_None)
+			if ( bWasSuccessful || State != ENetworkState::NS_None )
 			{
 				State = ENetworkState::NS_None;
 				CurrentSessionName = "";
@@ -650,27 +662,35 @@ void UShooterMultiGameInstance::OnDestroySessionComplete( FName SessionName, boo
 }
 
 void UShooterMultiGameInstance::OnNetworkFailure( UWorld* world, UNetDriver* netDriver, ENetworkFailure::Type type,
-	const FString& message )
+                                                  const FString& message )
 {
 	GEngine->AddOnScreenDebugMessage( -1, 10.f, FColor::Red,
-									  FString::Printf(
-										  TEXT("UShooterMultiGameInstance::OnNetworkFailure() - world [%p] | netDriver [%p] | type [%d] | message [%s]"), world, netDriver, (int)type, *message ));
+	                                  FString::Printf(
+		                                  TEXT(
+			                                  "UShooterMultiGameInstance::OnNetworkFailure() - world [%p] | netDriver [%p] | type [%d] | message [%s]"
+		                                  ), world, netDriver, (int)type, *message ) );
 
-	UE_LOG( LogTemp, Error, TEXT("UShooterMultiGameInstance::OnNetworkFailure() - world [%p] | netDriver [%p] | type [%d] | message [%s]"), world, netDriver, (int)type, *message );
+	UE_LOG( LogTemp, Error, TEXT(
+			"UShooterMultiGameInstance::OnNetworkFailure() - world [%p] | netDriver [%p] | type [%d] | message [%s]"), world,
+		netDriver, (int)type, *message )
+	;
 }
 
 void UShooterMultiGameInstance::OnTravelFailure( UWorld* world, ETravelFailure::Type type, const FString& message )
 {
 	GEngine->AddOnScreenDebugMessage( -1, 10.f, FColor::Red,
-									  FString::Printf(
-										  TEXT("UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"), world, (int)type, *message ));
+	                                  FString::Printf(
+		                                  TEXT(
+			                                  "UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"
+		                                  ), world, (int)type, *message ) );
 
-	UE_LOG( LogTemp, Error, TEXT("UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"), world, (int)type, *message );
+	UE_LOG( LogTemp, Error, TEXT("UShooterMultiGameInstance::OnTravelFailure() - world [%p] | type [%d] | message [%s]"),
+		world, (int)type, *message );
 }
 
 void UShooterMultiGameInstance::GoToMainMap() const
 {
-	if (bAllowMainMap)
+	if ( bAllowMainMap )
 	{
 		UWorld* world = WorldContext->World();
 		if ( world )
