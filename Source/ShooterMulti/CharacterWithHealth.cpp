@@ -66,6 +66,11 @@ void ACharacterWithHealth::BeginPlay()
 
 	FadingIn = true;
 	FadeInTimer = 0;
+
+	if (SpawnSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
+	}
 }
 
 void ACharacterWithHealth::Tick(float DeltaTime)
@@ -206,6 +211,11 @@ void ACharacterWithHealth::Netmulticast_Die_Implementation()
 	}
 
 	MarkerComponent->DestroyComponent(false);
+
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
+	}
 }
 
 void ACharacterWithHealth::StartDisapear()
