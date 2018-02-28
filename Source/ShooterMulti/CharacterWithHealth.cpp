@@ -63,6 +63,9 @@ void ACharacterWithHealth::BeginPlay()
 		mat->SetScalarParameterValue("DissolveAmmount", 0.f);
 		mat->SetVectorParameterValue("BodyColor", vectorColor);
 	}
+
+	FadingIn = true;
+	FadeInTimer = 0;
 }
 
 void ACharacterWithHealth::Tick(float DeltaTime)
@@ -76,6 +79,19 @@ void ACharacterWithHealth::Tick(float DeltaTime)
 
 		if (Disapearing)
 			UpdateDisapear();
+	}
+	else if (FadingIn)
+	{
+		FadeInTimer += DeltaTime;
+		if (FadeInTimer > FadeInDuration)
+		{
+			FadingIn = false;
+			SetDissolveAmount(0.0f);
+		}
+		else
+		{
+			SetDissolveAmount(1.0f - (FadeInTimer / FadeInDuration));
+		}
 	}
 }
 
@@ -203,16 +219,20 @@ void ACharacterWithHealth::UpdateDisapear()
 	if (DisapearTimer > DisapearingTime)
 		return FinishDisapear();
 
-	float t = DisapearTimer / DisapearingTime;
-	for (auto mat : DissolveMaterials)
-	{
-		mat->SetScalarParameterValue("DissolveAmmount", t);
-	}
+	SetDissolveAmount(DisapearTimer / DisapearingTime);
 }
 
 void ACharacterWithHealth::FinishDisapear()
 {
 	Destroy();
+}
+
+void ACharacterWithHealth::SetDissolveAmount(float t)
+{
+	for (auto mat : DissolveMaterials)
+	{
+		mat->SetScalarParameterValue("DissolveAmmount", t);
+	}
 }
 
 void ACharacterWithHealth::ForceColor(FLinearColor Color)
