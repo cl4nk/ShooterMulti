@@ -20,12 +20,17 @@ void UTeamAgroService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 	if (BlackBoard == nullptr)
 		return;
 
-	AAIController* Controller = Cast<AAIController>(OwnerComp.GetOwner());
-	ACharacterWithHealth* Undead = Cast<ACharacterWithHealth>(Controller->GetPawn());
-	if (!Undead)
-		return;
+	if (Undead == nullptr) 
+	{
+		AController* Controller = Cast<AController>(OwnerComp.GetOwner());
+		Undead = Cast<ACharacterWithHealth>(Controller->GetPawn());
 
-	int TeamIndex = Undead->GetTeamID();
+		if (Undead)
+			TeamID = Undead->GetTeamID();
+	}
+
+	if (Undead == nullptr)
+		return;
 
 	UWorld* World = Undead->GetWorld();
 	check (World);
@@ -41,7 +46,7 @@ void UTeamAgroService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 	{
 		ACharacterWithHealth* Target = Cast<ACharacterWithHealth>(UGameplayStatics::GetPlayerCharacter(World, i));
 
-		if (Target && (TeamIndex == -1 || Target->GetTeamID() != TeamIndex))
+		if (Target && (TeamID == -1 || Target->GetTeamID() != TeamID))
 		{
 			float DistanceSquared = FVector::DistSquared(CurrentLocation, Target->GetActorLocation());
 			if (DistanceSquared < MinDistance && Target->IsDead() == false)
