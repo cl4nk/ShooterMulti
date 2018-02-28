@@ -375,8 +375,8 @@ bool AShooterCharacter::NetMulticast_ExecuteAbortReload_Validate()
 //#pragma region Shooting
 void AShooterCharacter::StartShoot()
 {
-	if (CurrentState != EShooterCharacterState::IdleRun
-		&& CurrentState != EShooterCharacterState::Aim
+	if ((CurrentState != EShooterCharacterState::IdleRun
+		&& CurrentState != EShooterCharacterState::Aim)
 		|| IsDead())
 		return;
 
