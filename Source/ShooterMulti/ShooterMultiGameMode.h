@@ -25,7 +25,7 @@ GENERATED_BODY()
 public:
 	AShooterMultiGameMode();
 
-#pragma region AGameModeBase
+//#pragma region AGameModeBase
 	void BeginPlay() override;
 	void Destroyed() override;
 
@@ -38,9 +38,9 @@ public:
 protected:
 	FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId,
 	                      const FString& Options, const FString& Portal) override;
-#pragma endregion
+//#pragma endregion
 
-#pragma region PlayerStart choice
+//#pragma region PlayerStart choice
 public:
 	AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
 
@@ -52,7 +52,7 @@ protected:
 	void SetAllPlayersReady (bool value);
 
 	bool AreAllPlayersReady() const;
-#pragma endregion
+//#pragma endregion
 
 public:
 	/**
@@ -112,7 +112,7 @@ protected:
 
 	void SetIgnoreAllInputs( bool bIgnoreInputs );
 
-#pragma region State / Flow
+//#pragma region State / Flow
 public:
 	/**
 	 * \brief Changes state of the game
@@ -128,7 +128,7 @@ protected:
 	void OnChangeStateCountdown();
 	void OnChangeStatePlaying();
 	void OnChangeStateEndGame();
-#pragma endregion
+//#pragma endregion
 
 protected:
 	/**

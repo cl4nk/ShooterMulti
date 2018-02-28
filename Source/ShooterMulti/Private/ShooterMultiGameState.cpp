@@ -68,7 +68,7 @@ void AShooterMultiGameState::SetState(const EShooterMultiState newState)
 	}
 }
 
-#pragma region Game Flow
+//#pragma region Game Flow
 
 void AShooterMultiGameState::OnRep_State()
 {
@@ -120,7 +120,7 @@ int AShooterMultiGameState::GetMaxTeamCount() const
 }
 
 
-#pragma region Time Since Game Start
+//#pragma region Time Since Game Start
 float AShooterMultiGameState::GetTimeSinceGameStart() const
 {
 	return TimeSinceGameStart;
@@ -159,11 +159,11 @@ bool AShooterMultiGameState::NetMulticast_ReplicateTimeSinceGameStart_Validate(
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma endregion
+//#pragma endregion
 
-#pragma region Scores
+//#pragma region Scores
 void AShooterMultiGameState::NotifyKill(const int32 killerTeamId, const FString& killerName, const int32 victimTeamId,
                                         const FString& victimName)
 {
@@ -269,9 +269,9 @@ bool AShooterMultiGameState::NetMulticast_OnKill_Validate(const int32 killerTeam
 	return true;
 }
 
-#pragma endregion
+//#pragma endregion
 
-#pragma region Teams
+//#pragma region Teams
 int32 AShooterMultiGameState::GetTeamAutofill() const
 {
 	return PlayersPerTeam.Find(FMath::Min(PlayersPerTeam));
@@ -312,7 +312,7 @@ FLinearColor AShooterMultiGameState::GetTeamColor(const int32 teamId) const
 
 	return ColorList[teamId];
 }
-#pragma endregion
+//#pragma endregion
 
 bool AShooterMultiGameState::CanChangeTeamWhilePlaying() const
 {

@@ -30,7 +30,7 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-#pragma region Game Flow
+//#pragma region Game Flow
 public:
 	/**
 	 * \brief Set current state
@@ -86,7 +86,7 @@ protected:
 	UPROPERTY(Replicated, Transient, VisibleAnywhere, BlueprintReadOnly, Category = "Game Flow")
 	bool bGameHasBeenWon;
 
-#pragma region Time Since Game Start
+//#pragma region Time Since Game Start
 public:
 	/**
 	 * \brief Get the current time since game start on client
@@ -136,11 +136,11 @@ protected:
 	void NetMulticast_ReplicateTimeSinceGameStart(const float replicatedTimeSinceGameStart);
 	void NetMulticast_ReplicateTimeSinceGameStart_Implementation(const float replicatedTimeSinceGameStart);
 	bool NetMulticast_ReplicateTimeSinceGameStart_Validate(const float replicatedTimeSinceGameStart);
-#pragma endregion
+//#pragma endregion
 
-#pragma endregion
+//#pragma endregion
 
-#pragma region Scores
+//#pragma region Scores
 public:
 	/**
 	 * \brief Notify GameState a player has died
@@ -256,9 +256,9 @@ protected:
 	 */
 	UPROPERTY(Replicated, Transient, VisibleAnywhere, BlueprintReadOnly, Category = "Score")
 	int32 ScoreToWin;
-#pragma endregion
+//#pragma endregion
 
-#pragma region Teams
+//#pragma region Teams
 public:
 	/**
 	 * \brief Get the team in which the autofill algorithm would add a new player
@@ -288,9 +288,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "status")
 	TArray<FLinearColor> ColorList;
-#pragma endregion
+//#pragma endregion
 
-#pragma region Game Configuration
+//#pragma region Game Configuration
 public:
 	/**
 	 * \brief Ask if players can change teams while game is playing
@@ -305,5 +305,5 @@ protected:
 	 */
 	UPROPERTY(Replicated, Transient, VisibleAnywhere, BlueprintReadOnly, Category = "Game Configuration")
 	bool bCanChangeTeamWhilePlaying;
-#pragma endregion
+//#pragma endregion
 };

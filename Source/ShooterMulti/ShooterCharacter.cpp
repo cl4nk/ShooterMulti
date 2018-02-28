@@ -245,7 +245,7 @@ int AShooterCharacter::GetAmmoLeft() const
 	return AmmoLeft;
 }
 
-#pragma region Reload
+//#pragma region Reload
 void AShooterCharacter::AddAmmo(const int ammoReload)
 {
 	Server_AskAddAmmo(ammoReload);
@@ -370,9 +370,9 @@ bool AShooterCharacter::NetMulticast_ExecuteAbortReload_Validate()
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma region Shooting
+//#pragma region Shooting
 void AShooterCharacter::StartShoot()
 {
 	if (CurrentState != EShooterCharacterState::IdleRun
@@ -483,9 +483,9 @@ bool AShooterCharacter::NetMulticast_MakeBeamFeedback_Validate(FHitResult hitRes
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma region Punch
+//#pragma region Punch
 void AShooterCharacter::Punch()
 {
 	Server_AskPunch();
@@ -552,9 +552,9 @@ bool AShooterCharacter::NetMulticast_ExecutePunch_Validate()
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma region Aim
+//#pragma region Aim
 void AShooterCharacter::StartAim()
 {
 	if (CurrentState != EShooterCharacterState::IdleRun
@@ -626,9 +626,9 @@ bool AShooterCharacter::NetMulticast_ExecuteEndAim_Validate()
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
-#pragma region Sprint
+//#pragma region Sprint
 void AShooterCharacter::StartSprint()
 {
 	if ((CurrentState != EShooterCharacterState::IdleRun &&
@@ -695,7 +695,7 @@ bool AShooterCharacter::NetMulticast_ExecuteEndSprint_Validate()
 {
 	return true;
 }
-#pragma endregion
+//#pragma endregion
 
 float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
                                     AActor* DamageCauser)
