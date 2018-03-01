@@ -50,6 +50,7 @@ void AShooterMultiHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AShooterMultiHUD::OnStateChange(EShooterMultiState state)
 {
+	RemoveAllWidgets();
 	switch (state)
 	{
 	case EShooterMultiState::SMS_BeforeStart:
