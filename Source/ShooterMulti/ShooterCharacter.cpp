@@ -77,8 +77,10 @@ void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	APlayerController* playerController = Cast<APlayerController>(GetController());
-	const bool bIsPossesed = (playerController == GetWorld()->GetFirstPlayerController());
+	APlayerController* playerController = Cast<APlayerController>( GetController() );
+	const bool bIsPossesed = IS_LOCAL_MULTIPLAYER // If PS4, consider Local multiplayer
+		                         ? true
+		                         : ( playerController == GetWorld()->GetFirstPlayerController() );
 
 	// Only on possessed client
 	if (bIsPossesed)
@@ -160,6 +162,12 @@ void AShooterCharacter::Tick(float DeltaTime)
 
 void AShooterCharacter::Client_Possess_Implementation()
 {
+	if ( IS_LOCAL_MULTIPLAYER )
+	{
+		UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::Client_Possess_Implementation - WE ARE ON PS4, consider Local Multiplayer" ) );
+		return;
+	}
+
 	AShooterPlayerController* playerController = Cast<AShooterPlayerController>(GetWorld()->GetFirstPlayerController());
 
 	playerController->ShooterCharacter = this;
