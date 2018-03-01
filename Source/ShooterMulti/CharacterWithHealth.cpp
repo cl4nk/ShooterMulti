@@ -123,6 +123,8 @@ float ACharacterWithHealth::TakeDamage(float DamageAmount, FDamageEvent const& D
 	if (Role != ROLE_Authority)
 		return doneDamages;
 
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
 	const FPointDamageEvent* pointDamage = nullptr;
 
 	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
