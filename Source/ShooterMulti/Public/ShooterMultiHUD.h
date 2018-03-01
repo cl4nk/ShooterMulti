@@ -41,9 +41,12 @@ protected:
 	UFUNCTION()
 	void OnStateChange(EShooterMultiState state);
 
-	void CreateMemberWidget(UUserWidget* & instance, TSubclassOf<UUserWidget> widgetClass);
+	void CreateMemberWidget(UUserWidget* & instance, TSubclassOf<UUserWidget> widgetClass, int32 ZOrder = 0);
 
 	void RemoveWidget(UUserWidget* & instance);
+
+	UFUNCTION()
+	void RemoveStartWidget();
 
 	UFUNCTION()
 	void InfoPanelEnabled(bool enabled);
@@ -85,6 +88,9 @@ protected:
 	UUserWidget* StartWidgetInstance = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float StartDuration = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> UIWidget;
 
 	UUserWidget* UIWidgetInstance = nullptr;
@@ -98,4 +104,6 @@ protected:
 
 	FDelegateHandle StateEventHandle;
 	FDelegateHandle InfoEventHandle;
+
+	FTimerHandle  StartWidgetTimer;
 };
