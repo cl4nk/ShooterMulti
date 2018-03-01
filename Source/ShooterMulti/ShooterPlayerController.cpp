@@ -232,6 +232,16 @@ bool AShooterPlayerController::Client_SetIgnoreAllInputs_Validate(bool bIgnoreIn
 	return true;
 }
 
+void AShooterPlayerController::Client_RemoveAllWidgets_Implementation()
+{
+	GEngine->GameViewport->RemoveAllViewportWidgets();
+}
+
+bool AShooterPlayerController::Client_RemoveAllWidgets_Validate()
+{
+	return true;
+}
+
 void AShooterPlayerController::ShowInfo()
 {
 	OnInfoEnabled.Broadcast(true);

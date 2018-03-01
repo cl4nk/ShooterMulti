@@ -186,6 +186,7 @@ void AShooterMultiGameMode::OnPlayerReady()
 		{
 			UShooterMultiGameInstance * GameInstance = Cast<UShooterMultiGameInstance>(GetGameInstance());
 			SetAllPlayersReady(false);
+			SetRemoveAllWidgetBeforeServerTravel();
 			GameInstance->ServerTravelToMainMap();
 		}
 	}
@@ -386,6 +387,16 @@ void AShooterMultiGameMode::SetIgnoreAllInputs( bool bIgnoreInputs )
 		AShooterPlayerController* playerController = Cast<AShooterPlayerController>( controllerIter->Get() );
 		if ( playerController )
 			playerController->Client_SetIgnoreAllInputs( bIgnoreInputs );
+	}
+}
+
+void AShooterMultiGameMode::SetRemoveAllWidgetBeforeServerTravel()
+{
+	for ( FConstControllerIterator controllerIter = GetWorld()->GetControllerIterator(); controllerIter; ++controllerIter )
+	{
+		AShooterPlayerController* playerController = Cast<AShooterPlayerController>( controllerIter->Get() );
+		if ( playerController )
+			playerController->Client_RemoveAllWidgets();
 	}
 }
 

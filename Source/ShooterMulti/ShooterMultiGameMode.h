@@ -111,6 +111,8 @@ protected:
 	void SetIgnoreMoveLookInput( bool moveInput, bool lookInput );
 
 	void SetIgnoreAllInputs( bool bIgnoreInputs );
+	
+	void SetRemoveAllWidgetBeforeServerTravel();
 
 //#pragma region State / Flow
 public:
