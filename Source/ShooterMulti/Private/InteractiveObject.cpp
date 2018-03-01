@@ -24,12 +24,24 @@ void AInteractiveObject::ReceiveInteraction(AShooterCharacter* Character)
 
 void AInteractiveObject::OnReceiveInteraction_Implementation(AShooterCharacter* Character)
 {
+	if (InteractionSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), InteractionSound, GetActorLocation());
+	}
 }
 
 void AInteractiveObject::OnSelectableEnter_Implementation(AActor* Actor)
 {
+	if (EnterSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnterSound, GetActorLocation());
+	}
 }
 
 void AInteractiveObject::OnSelectableExit_Implementation(AActor* Actor)
 {
+	if (ExitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExitSound, GetActorLocation());
+	}
 }

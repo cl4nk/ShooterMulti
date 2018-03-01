@@ -8,10 +8,10 @@
 void ARechargeAmmos::OnSelectableEnter_Implementation(AActor* Actor)
 {
 	Super::OnSelectableEnter_Implementation(Actor);
-
 	AShooterCharacter* Character = Cast<AShooterCharacter>(Actor);
 	if (Character)
 	{
+		Super::OnReceiveInteraction(Character);
 		Character->AddAmmo(Ammo);
 		Destroy();
 	}

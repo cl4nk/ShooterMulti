@@ -45,4 +45,11 @@ protected:
 	virtual void OnReceiveInteraction_Implementation(AShooterCharacter* Character);
 	virtual void OnSelectableEnter_Implementation(AActor* Actor);
 	virtual void OnSelectableExit_Implementation(AActor* Actor);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USoundBase * InteractionSound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USoundBase * EnterSound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USoundBase * ExitSound;
 };

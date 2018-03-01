@@ -6,6 +6,8 @@
 #include "BehaviorTree/Services/BTService_BlackboardBase.h"
 #include "TeamAgroService.generated.h"
 
+class ACharacterWithHealth;
+
 /**
  * 
  */
@@ -20,4 +22,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FBlackboardKeySelector DirtyKey;
+
+	ACharacterWithHealth * Undead;
+	int TeamID;
 };

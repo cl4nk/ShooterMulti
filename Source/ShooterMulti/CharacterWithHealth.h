@@ -50,8 +50,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Health)
 	virtual void ResetHealth();
 
-	
-
 	UFUNCTION(BlueprintPure, Category = Health)
 	bool IsDead();
 	UFUNCTION(BlueprintCallable, Category = Health)
@@ -85,6 +83,12 @@ protected:
 
 	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
 	UMarkerComponent * MarkerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USoundBase * SpawnSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USoundBase * DeathSound;
 
 	float DisapearTimer;
 	float FadeInTimer;
