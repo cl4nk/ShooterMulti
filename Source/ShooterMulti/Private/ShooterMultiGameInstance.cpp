@@ -696,7 +696,7 @@ void UShooterMultiGameInstance::GoToMainMap()
 		if ( world )
 		{
 			const int32 localPlayersNum = LocalPlayers.Num();
-			for ( int i = localPlayersNum - 1; i >= 0 ; --i )
+			for ( int i = localPlayersNum - 1; i > 0 ; --i )
 				RemoveLocalPlayer( LocalPlayers[i] );
 
 			UGameplayStatics::OpenLevel( world, MenuMapName, true );
