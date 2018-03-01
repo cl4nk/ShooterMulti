@@ -33,6 +33,9 @@ class SHOOTERMULTI_API AShooterCharacter : public ACharacterWithHealth
 {
 GENERATED_BODY()
 
+private:
+	const bool IS_LOCAL_MULTIPLAYER = UGameplayStatics::GetPlatformName() == "PS4" || true; // remove "|| true" to deactivate local multiplayer on PC
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = ShooterCharacter)
 	float SprintSpeed = 1000.f;

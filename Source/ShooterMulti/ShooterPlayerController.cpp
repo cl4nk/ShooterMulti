@@ -293,7 +293,7 @@ void AShooterPlayerController::Server_RequestRespawn_Implementation()
 	{
 		AShooterMultiPlayerState* playerState = Cast<AShooterMultiPlayerState>(PlayerState);
 		check( playerState );
-
+		
 		playerState->RequestRespawn();
 	}
 }

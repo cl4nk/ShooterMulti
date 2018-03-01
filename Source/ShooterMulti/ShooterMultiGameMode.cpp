@@ -91,12 +91,12 @@ void AShooterMultiGameMode::Logout( AController* controller )
 	AShooterPlayerController* castedController = Cast<AShooterPlayerController>( controller );
 	if ( castedController == nullptr )
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AShooterMultiGameMode::PostLogin() - controller is not a AShooterPlayerController"));
+		UE_LOG(LogTemp, Warning, TEXT("AShooterMultiGameMode::Logout() - controller is not a AShooterPlayerController"));
 		return;
 	}
 
 	DestroyPawnOfController( castedController );
-
+	
 	AShooterMultiPlayerState* playerState = Cast<AShooterMultiPlayerState>( castedController->PlayerState );
 	if ( playerState )
 	{
