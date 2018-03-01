@@ -688,12 +688,18 @@ void UShooterMultiGameInstance::OnTravelFailure( UWorld* world, ETravelFailure::
 		world, (int)type, *message );
 }
 
-void UShooterMultiGameInstance::GoToMainMap() const
+void UShooterMultiGameInstance::GoToMainMap()
 {
 	if ( bAllowMainMap )
 	{
 		UWorld* world = WorldContext->World();
 		if ( world )
+		{
+			const int32 localPlayersNum = LocalPlayers.Num();
+			for ( int i = 1; i < localPlayersNum ; ++i )
+				RemoveLocalPlayer( LocalPlayers[i] );
+
 			UGameplayStatics::OpenLevel( world, MenuMapName, true );
+		}
 	}
 }
