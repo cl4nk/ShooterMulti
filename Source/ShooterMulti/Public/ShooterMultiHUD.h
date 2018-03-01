@@ -38,6 +38,7 @@ protected:
 
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UFUNCTION()
 	void OnStateChange(EShooterMultiState state);
 
 	void CreateMemberWidget(UUserWidget* & instance, TSubclassOf<UUserWidget> widgetClass);
