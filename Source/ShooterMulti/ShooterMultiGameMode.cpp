@@ -467,6 +467,7 @@ void AShooterMultiGameMode::OnChangeStateBeforeStart()
 
 	gameState->SetScoreToWin( ScoreToWin );
 	gameState->SetNumberOfTeams( NumberOfTeams );
+	gameState->ResetScores();
 
 	SetIgnoreAllInputs( true );
 	SetIgnoreMoveLookInput( true, true );

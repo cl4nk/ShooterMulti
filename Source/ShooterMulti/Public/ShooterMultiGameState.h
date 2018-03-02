@@ -212,6 +212,8 @@ public:
 	 */
 	bool CheckIfTeamIdIsValid(const int32 teamId) const;
 
+	void ResetScores();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnKillEvent OnKill;
 

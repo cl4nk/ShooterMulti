@@ -3,6 +3,7 @@
 #include "ShooterMulti.h"
 #include "ShooterMultiGameState.h"
 #include "Net/UnrealNetwork.h"
+#include "ShooterMultiPlayerState.h"
 
 
 AShooterMultiGameState::AShooterMultiGameState()
@@ -255,6 +256,20 @@ int32 AShooterMultiGameState::GetNumberOfTeams() const
 bool AShooterMultiGameState::CheckIfTeamIdIsValid(const int32 teamId) const
 {
 	return teamId >= 0 && teamId < NbTeams;
+}
+
+void AShooterMultiGameState::ResetScores()
+{
+	if ( Role == ROLE_Authority )
+	{
+		const int32 nbPlayer = PlayerArray.Num();
+		for ( int i = 0; i < nbPlayer; ++i )
+		{
+			AShooterMultiPlayerState* playerState = Cast<AShooterMultiPlayerState>( PlayerArray[i] );
+			if ( playerState )
+				playerState->ResetStats();
+		}
+	}
 }
 
 void AShooterMultiGameState::NetMulticast_OnKill_Implementation(const int32 killerTeamId, const FString& killerName,
