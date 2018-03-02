@@ -15,9 +15,9 @@ void UHUDBlueprintLibrary::FindScreenEdgeLocationForWorldLocation(APlayerControl
 	int32 ViewportSizeX, ViewportSizeY;
 	PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
 	const FVector2D ViewportSize = FVector2D(ViewportSizeX, ViewportSizeY);
+	const FVector2D ViewportCenter = ViewportSize / 2;
+	const FVector2D ViewportHalf = ViewportCenter * EdgePercent;
 
-	FVector2D Max(ViewportSizeX * EdgePercent, ViewportSizeY * EdgePercent);
-	FVector2D Min(ViewportSize - Max);
 
 	float m_invert = 1.0f;
 	float m_rotateInvert = 0.0f;
@@ -30,15 +30,16 @@ void UHUDBlueprintLibrary::FindScreenEdgeLocationForWorldLocation(APlayerControl
 
 	PlayerController->ProjectWorldLocationToScreen(InLocation, ScreenPosition, true);
 
-
 	float AngleRadians = FMath::Atan2(ScreenPosition.Y, ScreenPosition.X);
 	AngleRadians -= FMath::DegreesToRadians(90.f);
 
 	OutRotationAngleDegrees = FMath::RadiansToDegrees(AngleRadians) + 180.f + m_rotateInvert;
 
-	ScreenPosition.X = FMath::Clamp(ScreenPosition.X, Min.X, Max.X);
-	ScreenPosition.Y = FMath::Clamp(ScreenPosition.Y, Min.Y, Max.Y);
+	FVector2D relToCenter = ScreenPosition - ViewportCenter;
+	FVector2D relToViewportCenter = relToCenter / ViewportCenter;
 
-	OutScreenPosition = ScreenPosition;
+	relToViewportCenter.Normalize();
+
+	OutScreenPosition = relToViewportCenter * ViewportHalf + ViewportCenter;
 }
 
