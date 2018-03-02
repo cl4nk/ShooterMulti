@@ -26,10 +26,10 @@ ACharacterWithHealth::ACharacterWithHealth() : TraceParams(FName(TEXT("Footprint
 	MarkerComponent = CreateDefaultSubobject<UMarkerComponent>(TEXT("Marker Component"));
 
 	FootLeft = CreateDefaultSubobject<UArrowComponent>(TEXT("Foot Left Arrow"));
-	FootLeft->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FootLeftSocket);
+	FootLeft->SetupAttachment(GetMesh(), FootLeftSocket);
 
 	FootRight = CreateDefaultSubobject<UArrowComponent>(TEXT("Foot Right Arrow"));
-	FootRight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FootRightSocket);
+	FootRight->SetupAttachment(GetMesh(), FootRightSocket);
 
 	AddOwnedComponent(MarkerComponent);
 }

@@ -185,6 +185,7 @@ void AShooterCharacter::Client_Possess_Implementation()
 			if ( gameState )
 			{
 				playerController->SetControllerLightColor( gameState->GetTeamColor( TeamId ).ToFColor( false ) );
+				UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::ChangeTeam - Tried to change color to [%s]" ), *gameState->GetTeamColor( TeamId ).ToString() );
 			}
 			else
 				UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::ChangeTeam - Couldn't retreive gameState" ) );
@@ -480,9 +481,6 @@ bool AShooterCharacter::NetMulticast_MakeImpactFeedback_Validate(FHitResult hitR
 void AShooterCharacter::NetMulticast_MakeBeamFeedback_Implementation( FHitResult hitResult,
                                                                       FLaserWeaponData weaponData )
 {
-	// TODO: remove if working and maybe send it
-	UMeshComponent* weaponMesh = Cast<UMeshComponent>( GetMesh()->GetChildComponent( 0 ) );
-
 	//make the beam visuals
 	UWeaponUtility::MakeLaserBeam( GetWorld(), weaponData.MuzzleTransform.GetLocation(), hitResult.ImpactPoint,
 	                               BeamParticle, BeamIntensity, FLinearColor( 1.f, 0.857892f, 0.036923f ),
