@@ -8,53 +8,16 @@
 
 EBTNodeResult::Type UFindWanderPoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	
 	UBlackboardComponent* BlackBoard = OwnerComp.GetBlackboardComponent();
 	if (BlackBoard == nullptr)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	if (Owner == nullptr)
-	{
-		AController* Controller = Cast<AController>(OwnerComp.GetOwner());
-		Owner = Controller->GetPawn();
-	}
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(OwnerComp.GetWorld(), ATargetPoint::StaticClass(), FoundActors);
 
-	FVector location = Owner->GetActorLocation();
-	FNavLocation navResult;
-
-	if (NavSystem == nullptr)
-	{
-		NavSystem = GetWorld()->GetNavigationSystem();
-	}
-
-	if (NavData == nullptr && NavSystem)
-	{
-		NavData = NavSystem->GetMainNavData(FNavigationSystem::ECreateIfEmpty::Invalid);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TUFindWanderPoint - Nav System null"));
-	}
-
-	if (NavData && NavSystem)
-	{
-		if (!NavSystem->GetRandomPointInNavigableRadius(location, Radius, navResult, NavData))
-		{
-			return EBTNodeResult::Failed;
-		}
-		else
-		{
-			location = navResult.Location;
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TUFindWanderPoint - Nav Data null"));
-	}
-
-	BlackBoard->SetValueAsVector(BlackboardKey.SelectedKeyName, location);
+	BlackBoard->SetValueAsVector(BlackboardKey.SelectedKeyName, FoundActors[FMath::RandRange(0, FoundActors.Num() - 1)]->GetActorLocation());
 	return EBTNodeResult::Succeeded;
 }
 

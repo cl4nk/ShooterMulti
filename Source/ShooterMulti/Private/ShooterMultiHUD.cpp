@@ -79,12 +79,12 @@ void AShooterMultiHUD::OnStateChange(EShooterMultiState state)
 	}
 }
 
-void AShooterMultiHUD::CreateMemberWidget(UUserWidget *& instance, TSubclassOf<UUserWidget> widgetClass)
+void AShooterMultiHUD::CreateMemberWidget(UUserWidget *& instance, TSubclassOf<UUserWidget> widgetClass, int32 ZOrder)
 {
 	if (instance == nullptr && widgetClass)
 	{
 		instance = CreateWidget<UUserWidget>(OwningController, widgetClass);
-		instance->AddToPlayerScreen();
+		instance->AddToPlayerScreen(ZOrder);
 		instance->SetKeyboardFocus();
 		instance->SetUserFocus(OwningController);
 	}
@@ -97,6 +97,15 @@ void AShooterMultiHUD::RemoveWidget(UUserWidget *& instance)
 		instance->RemoveFromParent();
 		instance = nullptr;
 	}
+}
+
+void AShooterMultiHUD::RemoveStartWidget()
+{
+	if (StartWidgetTimer.IsValid())
+	{
+		OwningController->GetWorld()->GetTimerManager().ClearTimer(StartWidgetTimer);
+	}
+	RemoveWidget(StartWidgetInstance);
 }
 
 void AShooterMultiHUD::InfoPanelEnabled(bool enabled)
@@ -130,8 +139,12 @@ void AShooterMultiHUD::OnCountdownGame()
 void AShooterMultiHUD::OnPlayingGame()
 {
 	OwningController->SetInputMode(FInputModeGameOnly());
-
 	OwningController->bShowMouseCursor = false;
+
+	CreateMemberWidget(StartWidgetInstance, StartWidget);
+
+	OwningController->GetWorld()->GetTimerManager().SetTimer(StartWidgetTimer, this, &AShooterMultiHUD::RemoveStartWidget, StartDuration, false);
+
 	CreateMemberWidget(UIWidgetInstance, UIWidget);
 	OwningController->OnInfoEnabled.AddDynamic(this, &AShooterMultiHUD::InfoPanelEnabled);
 
@@ -166,7 +179,7 @@ void AShooterMultiHUD::RemoveAllWidgets()
 	RemoveWidget(InfoPanelInstance);
 	RemoveWidget(LobbyWidgetInstance);
 	RemoveWidget(CountDownWidgetInstance);
-	RemoveWidget(StartWidgetInstance);
+	RemoveStartWidget();
 	RemoveWidget(UIWidgetInstance);
 	RemoveWidget(EndGameWidgetInstance);
 }

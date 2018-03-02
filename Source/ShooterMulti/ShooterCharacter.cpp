@@ -69,6 +69,8 @@ void AShooterCharacter::BeginPlay()
 	GotHit = false;
 
 	bInvincible = true;
+	GetMesh()->SetRenderCustomDepth(true);
+
 	TimeBeforeEndInvincibility = InvincibilityAtSpawn;
 }
 
@@ -749,7 +751,10 @@ void AShooterCharacter::VerifyInvincibility(const float deltaTime)
 	{
 		TimeBeforeEndInvincibility -= deltaTime;
 		if (TimeBeforeEndInvincibility <= 0)
+		{
 			bInvincible = false;
+			GetMesh()->SetRenderCustomDepth(false);
+		}
 	}
 }
 
