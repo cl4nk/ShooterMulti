@@ -49,4 +49,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	static void MakeImpactParticles(UWorld* World, UParticleSystem* ImpactParticles, const FHitResult& FromHit,
 	                                float Scale = 1.f);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	static void MakeImpactSound(UWorld* World, USoundBase* Sound, const FHitResult& FromHit);
 };

@@ -104,6 +104,9 @@ public:
 	class UParticleSystem* ImpactParticle;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ShooterCharacter|Weapon")
+	class USoundBase* ImpactSound;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ShooterCharacter|Weapon")
 	class UParticleSystem* BeamParticle;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ShooterCharacter|Weapon")
@@ -374,6 +377,7 @@ protected:
 
 	UCameraComponent* Camera;
 	USpringArmComponent* SpringArm;
+	UMeshComponent* weaponMesh;
 	float TargetSpringArmLength;
 	float TargetCameraFOV;
 
