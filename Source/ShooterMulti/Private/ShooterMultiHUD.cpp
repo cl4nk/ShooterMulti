@@ -141,7 +141,7 @@ void AShooterMultiHUD::OnPlayingGame()
 	OwningController->SetInputMode(FInputModeGameOnly());
 	OwningController->bShowMouseCursor = false;
 
-	CreateMemberWidget(StartWidgetInstance, StartWidget);
+	CreateMemberWidget(StartWidgetInstance, StartWidget, 1);
 
 	OwningController->GetWorld()->GetTimerManager().SetTimer(StartWidgetTimer, this, &AShooterMultiHUD::RemoveStartWidget, StartDuration, false);
 
