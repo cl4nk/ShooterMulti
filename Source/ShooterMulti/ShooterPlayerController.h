@@ -73,7 +73,7 @@ public:
 	void Client_SetIgnoreAllInputs_Implementation(bool bIgnoreInputs);
 	bool Client_SetIgnoreAllInputs_Validate(bool bIgnoreInputs);
 
-	UFUNCTION( NetMulticast, Reliable, WithValidation )
+	UFUNCTION( Client, Reliable, WithValidation )
 	void Client_RemoveAllWidgets();
 	void Client_RemoveAllWidgets_Implementation();
 	bool Client_RemoveAllWidgets_Validate();
