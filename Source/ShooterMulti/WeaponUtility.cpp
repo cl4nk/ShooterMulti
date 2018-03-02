@@ -101,3 +101,11 @@ void UWeaponUtility::MakeImpactParticles(UWorld* World, UParticleSystem* ImpactP
 
 	UGameplayStatics::SpawnEmitterAtLocation(World, ImpactParticles, hitTransform, true);
 }
+
+void UWeaponUtility::MakeImpactSound(UWorld* World, USoundBase* Sound, const FHitResult& FromHit)
+{
+	if (Sound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(World, Sound, FromHit.ImpactPoint);
+	}
+}

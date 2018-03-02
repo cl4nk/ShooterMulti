@@ -57,6 +57,17 @@ void AShooterCharacter::BeginPlay()
 		ShooterCharacterAnim = Cast<UShooterCharacterAnim>(mesh->AnimScriptInstance);
 		if (ShooterCharacterAnim)
 			ShooterCharacterAnim->SetShooterCharacter(this);
+
+		int count = mesh->GetNumChildrenComponents();
+		for (int i = 0; i < count; ++i)
+		{
+			UMeshComponent * subMesh = Cast<UMeshComponent>(mesh->GetChildComponent(i));
+			if (subMesh)
+			{
+				weaponMesh = subMesh;
+				break;
+			}
+		}
 	}
 
 	ResetHealth();
@@ -420,8 +431,6 @@ bool AShooterCharacter::IsShooting() const
 
 void AShooterCharacter::Server_TakeShot_Implementation(float shootSpread)
 {
-	UMeshComponent* weaponMesh = Cast<UMeshComponent>(GetMesh()->GetChildComponent(0));
-
 	if (AmmoInMag <= 0)
 	{
 		// EndShoot(); Already in Reload()
@@ -459,6 +468,8 @@ void AShooterCharacter::NetMulticast_MakeImpactFeedback_Implementation(FHitResul
 
 	//create impact particles
 	UWeaponUtility::MakeImpactParticles(GetWorld(), ImpactParticle, hitResult, .66f);
+	UWeaponUtility::MakeImpactSound(GetWorld(), ImpactSound, hitResult);
+
 }
 
 bool AShooterCharacter::NetMulticast_MakeImpactFeedback_Validate(FHitResult hitResult)

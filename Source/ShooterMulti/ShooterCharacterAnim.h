@@ -53,6 +53,12 @@ public:
 	UFUNCTION()
 	void AnimNotify_PunchHit(UAnimNotify* Notify);
 
+	UFUNCTION()
+	void AnimNotify_FootLeft(UAnimNotify* Notify);
+
+	UFUNCTION()
+	void AnimNotify_FootRight(UAnimNotify* Notify);
+
 protected:
 	AShooterCharacter* ShooterCharacter;
 	bool PunchMontagePlayed = false;

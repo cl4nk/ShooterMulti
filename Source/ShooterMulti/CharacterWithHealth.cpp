@@ -6,10 +6,12 @@
 #include "ShooterMultiGameState.h"
 #include "MarkerComponent.h"
 
+#include <string>
+
 ACharacterWithHealth::FShooterEvent ACharacterWithHealth::DeathEvent;
 
 // Sets default values
-ACharacterWithHealth::ACharacterWithHealth()
+ACharacterWithHealth::ACharacterWithHealth() : TraceParams(FName(TEXT("Footprint trace")), true, this)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,7 +21,16 @@ ACharacterWithHealth::ACharacterWithHealth()
 
 	BodyColor = FLinearColor::White;
 
+	TraceParams.bReturnPhysicalMaterial = true;
+
 	MarkerComponent = CreateDefaultSubobject<UMarkerComponent>(TEXT("Marker Component"));
+
+	FootLeft = CreateDefaultSubobject<UArrowComponent>(TEXT("Foot Left Arrow"));
+	FootLeft->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FootLeftSocket);
+
+	FootRight = CreateDefaultSubobject<UArrowComponent>(TEXT("Foot Right Arrow"));
+	FootRight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FootRightSocket);
+
 	AddOwnedComponent(MarkerComponent);
 }
 
@@ -244,6 +255,58 @@ void ACharacterWithHealth::SetDissolveAmount(float t)
 	for (auto mat : DissolveMaterials)
 	{
 		mat->SetScalarParameterValue("DissolveAmmount", t);
+	}
+}
+
+void ACharacterWithHealth::FootRightDown()
+{
+	FootDown(FootRight->GetComponentLocation());
+}
+
+void ACharacterWithHealth::FootLeftDown()
+{
+	FootDown(FootLeft->GetComponentLocation());
+}
+
+void ACharacterWithHealth::FootDown(FVector location)
+{
+	int32 soundCount = FootStepSounds.Num();
+	if (soundCount == 0) return;
+
+	FVector End = location + StepLine;
+
+	//Re-initialize hit info
+	FHitResult OutHit = FHitResult(ForceInit);
+	UWorld * world = GetWorld();
+
+	check(world);
+
+	world->LineTraceSingleByChannel(OutHit, location, End, ECC_WorldStatic, TraceParams);
+
+	if (!OutHit.bBlockingHit)
+		return;
+
+	UPhysicalMaterial* PhysMat = OutHit.PhysMaterial.Get();
+
+	USoundBase * sound = nullptr;
+
+	int index = PhysMat->SurfaceType;
+
+	if (index < soundCount)
+	{
+		sound = FootStepSounds[index];
+		//UE_LOG(LogTemp, Warning, TEXT("ACharacterWithHealth::FootDown - Sound found - index [%d]"), index);
+	}
+	
+	if (sound == nullptr)
+	{
+		sound = FootStepSounds[0];
+		//UE_LOG(LogTemp, Warning, TEXT("ACharacterWithHealth::FootDown - Sound not found, set to default"));
+	}
+
+	if (sound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(world, sound, OutHit.Location);
 	}
 }
 

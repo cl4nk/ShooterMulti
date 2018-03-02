@@ -63,3 +63,15 @@ void UShooterCharacterAnim::AnimNotify_PunchHit(UAnimNotify* Notify)
 	if (ShooterCharacter)
 		ShooterCharacter->InflictPunch();
 }
+
+void UShooterCharacterAnim::AnimNotify_FootLeft(UAnimNotify* Notify)
+{
+	if (ShooterCharacter)
+		ShooterCharacter->FootLeftDown();
+}
+
+void UShooterCharacterAnim::AnimNotify_FootRight(UAnimNotify* Notify)
+{
+	if (ShooterCharacter)
+		ShooterCharacter->FootRightDown();
+}
