@@ -72,6 +72,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Feedback)
 	void SetDissolveAmount(float t);
 
+	UFUNCTION(BlueprintCallable, Category = Feedback)
+	void FootLeftDown();
+
+	UFUNCTION(BlueprintCallable, Category = Feedback)
+	void FootRightDown();
+
+	void FootDown(FVector location);
+
 	DECLARE_EVENT_TwoParams(ACharacterWithHealth, FShooterEvent, ACharacterWithHealth*, AActor*)
 
 	static FShooterEvent DeathEvent;
@@ -82,19 +90,39 @@ protected:
 	float Health;
 
 	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
+	UArrowComponent	*FootLeft;
+
+	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
+	FName FootLeftSocket = "foot_l_socket";
+
+	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
+	UArrowComponent	*FootRight;
+
+	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
+	FName FootRightSocket = "foot_r_socket";
+
+	UPROPERTY(Category = CharacterWithHealth, VisibleDefaultsOnly, BlueprintReadOnly)
 	UMarkerComponent * MarkerComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Feedback)
+	FVector StepLine = FVector(0, 0, -500);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Feedback)
 	USoundBase * SpawnSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Feedback)
 	USoundBase * DeathSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Feedback)
+	TArray<USoundBase *> FootStepSounds;
 
 	float DisapearTimer;
 	float FadeInTimer;
 	bool FadingIn;
 	bool Disapearing;
 	TArray<UMaterialInstanceDynamic*> DissolveMaterials;
+
+	FCollisionQueryParams TraceParams;
 
 public:
 	/**

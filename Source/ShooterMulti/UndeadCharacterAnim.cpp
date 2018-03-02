@@ -34,3 +34,15 @@ void UUndeadCharacterAnim::AnimNotify_PunchHit(UAnimNotify* Notify)
 	if (UndeadCharacter)
 		UndeadCharacter->InflictPunch();
 }
+
+void UUndeadCharacterAnim::AnimNotify_FootLeft(UAnimNotify* Notify)
+{
+	if (UndeadCharacter)
+		UndeadCharacter->FootLeftDown();
+}
+
+void UUndeadCharacterAnim::AnimNotify_FootRight(UAnimNotify* Notify)
+{
+	if (UndeadCharacter)
+		UndeadCharacter->FootRightDown();
+}
