@@ -9,6 +9,7 @@
 #include "InteractionSphere.h"
 #include "ShooterPlayerController.h"
 #include "ShooterCharacterAnim.h"
+#include "ShooterMultiGameState.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -92,7 +93,7 @@ void AShooterCharacter::Tick(float DeltaTime)
 
 	APlayerController* playerController = Cast<APlayerController>( GetController() );
 	const bool bIsPossesed = IS_LOCAL_MULTIPLAYER // If PS4, consider Local multiplayer
-		                         ? true
+		                         ? playerController != nullptr
 		                         : ( playerController == GetWorld()->GetFirstPlayerController() );
 
 	// Only on possessed client
@@ -177,6 +178,21 @@ void AShooterCharacter::Client_Possess_Implementation()
 {
 	if ( IS_LOCAL_MULTIPLAYER )
 	{
+		AShooterPlayerController* playerController = Cast<AShooterPlayerController>( GetController() );
+		if ( playerController )
+		{
+			AShooterMultiGameState* gameState = GetWorld()->GetGameState<AShooterMultiGameState>();
+			if ( gameState )
+			{
+				playerController->SetControllerLightColor( gameState->GetTeamColor( TeamId ).ToFColor( false ) );
+				UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::ChangeTeam - Tried to change color to [%s]" ), *gameState->GetTeamColor( TeamId ).ToString() );
+			}
+			else
+				UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::ChangeTeam - Couldn't retreive gameState" ) );
+		}
+		else
+			UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::ChangeTeam - controller not valid" ) );
+
 		UE_LOG( LogTemp, Warning, TEXT( "AShooterCharacter::Client_Possess_Implementation - WE ARE ON PS4, consider Local Multiplayer" ) );
 		return;
 	}
@@ -465,9 +481,6 @@ bool AShooterCharacter::NetMulticast_MakeImpactFeedback_Validate(FHitResult hitR
 void AShooterCharacter::NetMulticast_MakeBeamFeedback_Implementation( FHitResult hitResult,
                                                                       FLaserWeaponData weaponData )
 {
-	// TODO: remove if working and maybe send it
-	UMeshComponent* weaponMesh = Cast<UMeshComponent>( GetMesh()->GetChildComponent( 0 ) );
-
 	//make the beam visuals
 	UWeaponUtility::MakeLaserBeam( GetWorld(), weaponData.MuzzleTransform.GetLocation(), hitResult.ImpactPoint,
 	                               BeamParticle, BeamIntensity, FLinearColor( 1.f, 0.857892f, 0.036923f ),

@@ -103,7 +103,7 @@ void UShooterMultiGameInstance::CreateDefaultOnlineGame( bool bIsLAN, bool bIsPr
 	// Call our custom HostSession function. GameSessionName is a GameInstance variable
 	HostSession( Player->GetPreferredUniqueNetId(), GameSessionName, MainMapName, bIsLAN, bIsPresence, MaxNumPlayers );
 
-	//if ( UGameplayStatics::GetPlatformName() == "PS4" )
+	if ( UGameplayStatics::GetPlatformName() == "PS4" || true ) // TODO remove || true for not test PC
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "CreateDefaultOnlineGame - WE ARE ON PS4" ) );
 		for ( int playerId = 1; playerId < MaxNumPlayers; ++playerId )
@@ -688,12 +688,18 @@ void UShooterMultiGameInstance::OnTravelFailure( UWorld* world, ETravelFailure::
 		world, (int)type, *message );
 }
 
-void UShooterMultiGameInstance::GoToMainMap() const
+void UShooterMultiGameInstance::GoToMainMap()
 {
 	if ( bAllowMainMap )
 	{
 		UWorld* world = WorldContext->World();
 		if ( world )
+		{
+			const int32 localPlayersNum = LocalPlayers.Num();
+			for ( int i = localPlayersNum - 1; i > 0 ; --i )
+				RemoveLocalPlayer( LocalPlayers[i] );
+
 			UGameplayStatics::OpenLevel( world, MenuMapName, true );
+		}
 	}
 }

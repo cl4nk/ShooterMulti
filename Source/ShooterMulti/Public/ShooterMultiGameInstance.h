@@ -161,7 +161,7 @@ protected:
 	void OnNetworkFailure( UWorld* world, UNetDriver* netDrive, ENetworkFailure::Type type, const FString& message );
 	void OnTravelFailure( UWorld* world, ETravelFailure::Type type, const FString& message );
 
-	void GoToMainMap() const;
+	void GoToMainMap();
 
 //#pragma region Host Delegates
 	/* Delegate called when session created */

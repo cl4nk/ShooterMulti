@@ -186,6 +186,7 @@ void AShooterMultiGameMode::OnPlayerReady()
 		{
 			UShooterMultiGameInstance * GameInstance = Cast<UShooterMultiGameInstance>(GetGameInstance());
 			SetAllPlayersReady(false);
+			SetRemoveAllWidgetBeforeServerTravel();
 			GameInstance->ServerTravelToMainMap();
 		}
 	}
@@ -389,6 +390,16 @@ void AShooterMultiGameMode::SetIgnoreAllInputs( bool bIgnoreInputs )
 	}
 }
 
+void AShooterMultiGameMode::SetRemoveAllWidgetBeforeServerTravel()
+{
+	for ( FConstControllerIterator controllerIter = GetWorld()->GetControllerIterator(); controllerIter; ++controllerIter )
+	{
+		AShooterPlayerController* playerController = Cast<AShooterPlayerController>( controllerIter->Get() );
+		if ( playerController )
+			playerController->Client_RemoveAllWidgets();
+	}
+}
+
 //#pragma region State / Game Flow
 void AShooterMultiGameMode::ChangeState(const EShooterMultiState shooterMultiState )
 {
@@ -456,6 +467,7 @@ void AShooterMultiGameMode::OnChangeStateBeforeStart()
 
 	gameState->SetScoreToWin( ScoreToWin );
 	gameState->SetNumberOfTeams( NumberOfTeams );
+	gameState->ResetScores();
 
 	SetIgnoreAllInputs( true );
 	SetIgnoreMoveLookInput( true, true );
