@@ -22,6 +22,7 @@ ACharacterWithHealth::ACharacterWithHealth() : TraceParams(FName(TEXT("Footprint
 	BodyColor = FLinearColor::White;
 
 	TraceParams.bReturnPhysicalMaterial = true;
+	TraceParams.bTraceComplex = true;
 
 	MarkerComponent = CreateDefaultSubobject<UMarkerComponent>(TEXT("Marker Component"));
 
